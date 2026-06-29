@@ -1,0 +1,11 @@
+# 개인정보·로컬 메모는 공개 저장소에 올리지 않음
+CLAUDE.md
+
+# macOS / 에디터 부산물
+.DS_Store
+.claude/
+
+# OMC / 로컬 상태
+.omc/
+prd.json
+progress.txt

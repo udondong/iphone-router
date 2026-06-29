@@ -1,0 +1,10 @@
+{
+  "name": "나라가족 5G Mobile Wi-Fi",
+  "short_name": "나라가족 5G",
+  "start_url": "./나라가족_라우터.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EFF1F4",
+  "theme_color": "#00AE42",
+  "icons": []
+}

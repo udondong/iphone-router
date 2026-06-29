@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="나라가족 5G">
+<meta name="theme-color" content="#EFF1F4">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>나라가족 5G Mobile Wi-Fi</title>
+<style>
+  :root{
+    --bg:#EFF1F4; --card:#FFFFFF; --card2:#F1F3F6; --track:#E4E6EB;
+    --text:#1A1C1E; --sub:#8B9097; --muted:#AAB0B7;
+    --blue:#2E8DEE; --green:#00AE42; --ok:#1FAE64; --red:#E8453C; --amber:#F5A623;
+    --shadow:0 6px 20px rgba(22,32,58,.07); --border:rgba(20,28,38,.08);
+  }
+  [data-theme="dark"]{
+    --bg:#0E0F12; --card:#191B20; --card2:#24272E; --track:#2A2E35;
+    --text:#ECEDEF; --sub:#9AA0A8; --muted:#71767F;
+    --blue:#4C9DF5; --green:#36C07B; --ok:#36C07B; --red:#FF5B52;
+    --shadow:0 10px 26px rgba(0,0,0,.34); --border:rgba(255,255,255,.07);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-text-size-adjust:100%;}
+  html,body{margin:0; min-height:100%; background:var(--bg); color:var(--text);}
+  body{
+    font-family:-apple-system,"SF Pro","Apple SD Gothic Neo","NanumGothic","Malgun Gothic",system-ui,sans-serif;
+    max-width:430px; margin:0 auto;
+    padding:max(24px,env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom));
+    font-variant-numeric:tabular-nums;
+  }
+  button,input,select{font:inherit;}
+  button{border:0; color:inherit; cursor:pointer;}
+  .top{display:flex; align-items:flex-start; justify-content:space-between; margin:2px 2px 20px;}
+  .eyebrow{font-size:12px; font-weight:800; color:var(--green); letter-spacing:.02em;}
+  h1{font-size:24px; line-height:1.12; margin:4px 0 0; letter-spacing:0; font-weight:900;}
+  .sub{font-size:13px; color:var(--sub); margin-top:5px;}
+  .pill{display:inline-flex; align-items:center; height:30px; padding:0 11px; border-radius:999px; background:rgba(0,174,66,.12); color:var(--green); font-size:12px; font-weight:800;}
+  .pill.off{background:var(--card2); color:var(--sub);}
+  .dot{width:8px; height:8px; border-radius:50%; background:currentColor; margin-right:7px;}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:22px; box-shadow:var(--shadow); padding:18px; margin-top:16px;}
+  .hero{padding:14px;}
+  .hero-grid{display:grid; grid-template-columns:142px 1fr; column-gap:13px; align-items:stretch;}
+  .qrbox{background:#fff; border-radius:18px; min-height:142px; display:flex; align-items:center; justify-content:center; padding:10px; border:1px solid rgba(0,0,0,.08);}
+  .qrbox svg{display:block; width:122px; height:122px;}
+  .qr-fallback{font-size:11px; line-height:1.35; color:#1A1C1E; word-break:break-all; text-align:left;}
+  .stack{display:flex; flex-direction:column; height:100%;}
+  .label{font-size:11px; color:var(--sub); font-weight:800; text-transform:uppercase; letter-spacing:.04em;}
+  .ssid{font-size:20px; font-weight:900; margin-top:4px; line-height:1.1; overflow-wrap:anywhere;}
+  .pass{font-size:16px; font-weight:800; color:var(--blue); margin-top:4px; overflow-wrap:anywhere;}
+  .mini{font-size:12px; color:var(--sub); line-height:1.42;}
+  .actions{display:grid; grid-template-columns:1fr 1fr; column-gap:8px; margin-top:auto; padding-top:10px;}
+  .btn{height:42px; border-radius:14px; font-weight:900; background:var(--card2); color:var(--text);}
+  .btn.primary{background:var(--green); color:#fff;}
+  .btn.blue{background:var(--blue); color:#fff;}
+  .sec-title{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
+  .sec-title h2{font-size:15px; margin:0; font-weight:900;}
+  .sec-title span{font-size:12px; color:var(--sub); font-weight:700;}
+  .rows{display:grid; row-gap:8px;}
+  .row{display:grid; grid-template-columns:1fr auto; align-items:center; column-gap:12px; min-height:50px; background:var(--card2); border-radius:14px; padding:12px 13px;}
+  .row .name{font-size:13px; font-weight:800;}
+  .row .desc{font-size:12px; color:var(--sub); margin-top:2px;}
+  .state{font-size:12px; font-weight:900; color:var(--sub);}
+  .state.ok{color:var(--ok);}
+  .state.warn{color:var(--amber);}
+  .state.bad{color:var(--red);}
+  .switch{width:52px; height:30px; border-radius:999px; background:var(--track); padding:3px; transition:.15s background;}
+  .switch i{display:block; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,.18); transition:.15s transform;}
+  .switch.on{background:var(--green);}
+  .switch.on i{transform:translateX(22px);}
+  .usage-grid{display:grid; grid-template-columns:112px 1fr; column-gap:13px; align-items:center;}
+  .ring{width:112px; height:112px; position:relative;}
+  .ring svg{width:112px; height:112px; display:block;}
+  .ring-center{position:absolute; left:0; top:0; width:112px; height:112px; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .big{font-size:25px; line-height:1; font-weight:900; letter-spacing:0;}
+  .big small{font-size:12px; color:var(--sub); margin-left:2px;}
+  .cap{font-size:11px; color:var(--sub); margin-top:3px;}
+  .metric{display:grid; row-gap:8px;}
+  .mrow{display:grid; grid-template-columns:1fr auto; column-gap:10px; align-items:baseline;}
+  .mrow span{font-size:12px; color:var(--sub); font-weight:800;}
+  .mrow b{font-size:14px; font-weight:900;}
+  .bar{height:12px; background:var(--track); border-radius:7px; overflow:hidden;}
+  .bar i{display:block; height:100%; width:0; background:var(--blue); border-radius:7px;}
+  .tabs{display:grid; grid-template-columns:1fr 1fr 1fr; column-gap:6px; margin-top:12px;}
+  .tab{height:39px; border-radius:14px; background:var(--card2); color:var(--sub); font-size:13px; font-weight:900;}
+  .tab.active{background:var(--blue); color:#fff;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .form{display:grid; row-gap:9px;}
+  .field{display:grid; grid-template-columns:95px 1fr; align-items:center; column-gap:10px;}
+  .field label{font-size:13px; color:var(--sub); font-weight:800;}
+  .field input,.field select{height:42px; border:0; outline:0; border-radius:14px; padding:0 12px; background:var(--card2); color:var(--text); font-weight:800; min-width:0;}
+  .notice{font-size:12px; line-height:1.45; color:var(--sub); background:var(--card2); border-radius:14px; padding:11px; margin-top:10px;}
+  .footer{font-size:11px; color:var(--muted); text-align:center; margin:14px 0 0;}
+  .toast{position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom)); transform:translateX(-50%) translateY(20px); opacity:0; background:#1A1C1E; color:#fff; padding:10px 14px; border-radius:999px; font-size:13px; font-weight:800; box-shadow:0 8px 24px rgba(0,0,0,.25); transition:.18s opacity,.18s transform; pointer-events:none; z-index:10;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  @media (max-width:370px){
+    body{padding-left:12px; padding-right:12px;}
+    .hero-grid{grid-template-columns:128px 1fr; column-gap:10px;}
+    .qrbox{min-height:128px;}
+    .qrbox img{width:108px; height:108px;}
+    .ssid{font-size:18px;}
+  }
+</style>
+<script>
+(function(){try{
+  var c=document.createElement('canvas');c.width=c.height=180;
+  var x=c.getContext('2d');
+  x.fillStyle='#00AE42';x.fillRect(0,0,180,180);
+  x.strokeStyle='#fff';x.lineCap='round';
+  var s=7*Math.PI/6,e=11*Math.PI/6,cy=113;
+  [[63,13],[41,13],[19,13]].forEach(function(a){x.lineWidth=a[1];x.beginPath();x.arc(90,cy,a[0],s,e);x.stroke();});
+  x.fillStyle='#fff';x.beginPath();x.arc(90,cy,8,0,2*Math.PI);x.fill();
+  var l=document.createElement('link');l.rel='apple-touch-icon';l.sizes='180x180';l.href=c.toDataURL();
+  document.head.appendChild(l);
+}catch(e){}})();
+</script>
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>나라가족 5G Mobile Wi-Fi</h1>
+      <div class="sub">연결 정보와 운영 체크만 빠르게 확인</div>
+    </div>
+    <button class="pill" id="hotspotPill" type="button"><span class="dot"></span><span id="hotspotText">켜짐</span></button>
+  </header>
+
+  <main>
+    <section class="card hero">
+      <div class="hero-grid">
+        <div class="qrbox" id="qrBox" aria-label="와이파이 접속 QR"></div>
+        <div class="stack">
+          <div class="label">Wi-Fi 이름</div>
+          <div class="ssid" id="ssidView">핫스팟 이름</div>
+          <div class="pass" id="passView">암호 입력</div>
+          <div class="mini" id="securityView">WPA/WPA2 · 카메라로 QR 스캔</div>
+          <div class="actions" style="grid-template-columns:1fr;">
+            <button class="btn primary" id="editWifi" type="button">수정</button>
+          </div>
+        </div>
+      </div>
+      <div class="notice">QR은 이 파일 안에서 직접 생성됩니다. 외부 서버나 인터넷 연결 없이도 저장된 Wi-Fi 이름과 비밀번호로 작동합니다.</div>
+    </section>
+
+    <nav class="tabs" aria-label="화면 전환">
+      <button class="tab active" data-tab="connect" type="button">연결</button>
+      <button class="tab" data-tab="shortcut" type="button">단축어</button>
+      <button class="tab" data-tab="setup" type="button">설정</button>
+    </nav>
+
+    <section class="panel active" id="panel-connect">
+      <div class="card">
+        <div class="sec-title"><h2>운영 체크</h2><span id="readyText">3/4 확인</span></div>
+        <div class="rows">
+          <div class="row">
+            <div><div class="name">개인용 핫스팟</div><div class="desc">아이폰 설정에서 켜 둔 상태</div></div>
+            <button class="switch on" data-toggle="hotspot" type="button"><i></i></button>
+          </div>
+          <div class="row">
+            <div><div class="name">호환성 최대화</div><div class="desc">Android/구형 기기가 안 붙을 때 사용</div></div>
+            <button class="switch" data-toggle="compat" type="button"><i></i></button>
+          </div>
+          <div class="row">
+            <div><div class="name">충전 연결</div><div class="desc">핫스팟 전용 운용은 상시 전원 권장</div></div>
+            <button class="switch on" data-toggle="charging" type="button"><i></i></button>
+          </div>
+          <div class="row">
+            <div><div class="name">가족 기기 자동 연결</div><div class="desc">Apple 기기는 같은 계정/가족 공유가 가장 편함</div></div>
+            <button class="switch on" data-toggle="family" type="button"><i></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-shortcut">
+      <div class="card">
+        <div class="sec-title"><h2>단축어</h2><span>버튼을 누르면 바로 실행</span></div>
+        <div class="rows">
+          <a class="row" href="shortcuts://run-shortcut?name=%ED%95%AB%EC%8A%A4%ED%8C%9F%20%EC%84%A4%EC%A0%95" style="text-decoration:none;color:inherit;">
+            <div><div class="name">핫스팟 설정</div><div class="desc">개인용 핫스팟 켜기 / 끄기</div></div>
+            <span class="state ok">실행 ›</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-setup">
+      <div class="card">
+        <div class="sec-title"><h2>기본 설정</h2><span>홈 화면 저장</span></div>
+        <div class="form">
+          <div class="field"><label for="ssidInput">Wi-Fi 이름</label><input id="ssidInput" autocomplete="off"></div>
+          <div class="field"><label for="passInput">비밀번호</label><input id="passInput" autocomplete="off"></div>
+          <div class="field"><label for="secInput">보안</label><select id="secInput"><option value="WPA">WPA/WPA2</option><option value="nopass">암호 없음</option></select></div>
+          <button class="btn primary" id="saveSettings" type="button">저장</button>
+        </div>
+        <div class="notice">iOS 웹앱은 핫스팟 상태와 사용량을 자동으로 읽지 못합니다. 이 화면은 전용기기 운영을 위한 수동 체크판입니다.</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer" id="footerText">마지막 업데이트 -</div>
+  <div class="toast" id="toast">복사됨</div>
+
+<script>
+(function(){
+  var KEY='naragajok-iphone12-hotspot-v1';
+  var state={
+    ssid:'핫스팟 이름',
+    password:'',
+    security:'WPA',
+    hotspot:1,
+    compat:0,
+    charging:1,
+    family:1,
+    updated:''
+  };
+  function load(){
+    try{
+      var saved=JSON.parse(localStorage.getItem(KEY) || '{}');
+      for(var k in saved){ if(Object.prototype.hasOwnProperty.call(state,k)){ state[k]=saved[k]; } }
+    }catch(e){}
+  }
+  function save(){
+    state.updated=new Date().toISOString();
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+  function escWifi(s){
+    return String(s || '').replace(/([\\;,":])/g,'\\$1');
+  }
+  function wifiString(){
+    var auth=state.security === 'nopass' ? 'nopass' : 'WPA';
+    return 'WIFI:T:' + auth + ';S:' + escWifi(state.ssid) + ';P:' + escWifi(state.password) + ';;';
+  }
+  function makeQrSvg(text){
+    var qr=makeQrMatrix(text);
+    if(!qr){ return '<div class="qr-fallback">'+escapeHtml(wifiString())+'</div>'; }
+    var scale=4, pad=4, size=qr.length, out=[];
+    out.push('<svg viewBox="0 0 '+(size+pad*2)+' '+(size+pad*2)+'" role="img" aria-label="Wi-Fi QR" xmlns="http://www.w3.org/2000/svg">');
+    out.push('<rect width="100%" height="100%" fill="#fff"/>');
+    out.push('<path fill="#111" d="');
+    for(var y=0;y<size;y++){
+      for(var x=0;x<size;x++){
+        if(qr[y][x]){ out.push('M'+(x+pad)+' '+(y+pad)+'h1v1h-1z'); }
+      }
+    }
+    out.push('"/></svg>');
+    return out.join('');
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+  }
+  function fmtTime(iso){
+    if(!iso){ return '아직 저장 전'; }
+    var d=new Date(iso);
+    if(isNaN(d.getTime())){ return '아직 저장 전'; }
+    var hh=('0'+d.getHours()).slice(-2);
+    var mm=('0'+d.getMinutes()).slice(-2);
+    return '오늘 ' + hh + ':' + mm;
+  }
+  function setText(id, txt){ document.getElementById(id).textContent=txt; }
+  function setSwitch(k){
+    var el=document.querySelector('[data-toggle="'+k+'"]');
+    if(el){ el.className='switch' + (state[k] ? ' on' : ''); }
+  }
+  function render(){
+    setText('ssidView', state.ssid || '핫스팟 이름');
+    setText('passView', state.password ? state.password : '비밀번호 입력');
+    setText('securityView', (state.security === 'nopass' ? '암호 없음' : 'WPA/WPA2') + ' · 카메라로 QR 스캔');
+    var qr=document.getElementById('qrBox');
+    qr.innerHTML=makeQrSvg(wifiString());
+    var pill=document.getElementById('hotspotPill');
+    pill.className='pill' + (state.hotspot ? '' : ' off');
+    setText('hotspotText', state.hotspot ? '켜짐' : '꺼짐');
+    setSwitch('hotspot'); setSwitch('compat'); setSwitch('charging'); setSwitch('family');
+    var checked=(state.hotspot?1:0)+(state.compat?1:0)+(state.charging?1:0)+(state.family?1:0);
+    setText('readyText', checked + '/4 확인');
+    setText('footerText', '마지막 업데이트 ' + fmtTime(state.updated));
+
+    document.getElementById('ssidInput').value=state.ssid;
+    document.getElementById('passInput').value=state.password;
+    document.getElementById('secInput').value=state.security;
+  }
+  function toast(msg){
+    var t=document.getElementById('toast');
+    t.textContent=msg;
+    t.className='toast show';
+    setTimeout(function(){ t.className='toast'; },1400);
+  }
+  function copyText(txt){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ toast('복사됨'); },function(){ prompt('복사할 내용', txt); });
+    }else{
+      prompt('복사할 내용', txt);
+    }
+  }
+  function showTab(name){
+    var tabs=document.querySelectorAll('.tab');
+    var panels=document.querySelectorAll('.panel');
+    for(var i=0;i<tabs.length;i++){ tabs[i].className='tab' + (tabs[i].getAttribute('data-tab')===name ? ' active' : ''); }
+    for(var j=0;j<panels.length;j++){ panels[j].className='panel' + (panels[j].id==='panel-'+name ? ' active' : ''); }
+  }
+  function makeQrMatrix(text){
+    var ver=5, size=37, dataCap=108, eccLen=26;
+    var bytes=utf8Bytes(text);
+    if(bytes.length>106){ return null; }
+    var bits=[];
+    appendBits(bits,4,4);
+    appendBits(bits,bytes.length,8);
+    for(var i=0;i<bytes.length;i++){ appendBits(bits,bytes[i],8); }
+    var totalBits=dataCap*8;
+    appendBits(bits,0,Math.min(4,totalBits-bits.length));
+    while(bits.length%8!==0){ bits.push(0); }
+    var data=[];
+    for(i=0;i<bits.length;i+=8){ data.push(bitsToByte(bits,i)); }
+    for(var pad=0xec;data.length<dataCap;pad=pad===0xec?0x11:0xec){ data.push(pad); }
+    var codewords=data.concat(rsRemainder(data,eccLen));
+    var base=[], func=[];
+    for(var y=0;y<size;y++){ base[y]=[]; func[y]=[]; for(var x=0;x<size;x++){ base[y][x]=false; func[y][x]=false; } }
+    drawFunctionPatterns(base,func,ver);
+    placeData(base,func,codewords);
+    var best=null,bestScore=1e9,bestMask=0;
+    for(var mask=0;mask<8;mask++){
+      var m=cloneMatrix(base);
+      applyMask(m,func,mask);
+      drawFormatBits(m,func,mask);
+      var score=qrPenalty(m);
+      if(score<bestScore){ bestScore=score; best=m; bestMask=mask; }
+    }
+    drawFormatBits(best,func,bestMask);
+    return best;
+  }
+  function utf8Bytes(s){
+    var out=[];
+    for(var i=0;i<s.length;i++){
+      var c=s.charCodeAt(i);
+      if(c>=0xd800&&c<=0xdbff&&i+1<s.length){
+        var d=s.charCodeAt(++i);
+        c=0x10000+((c-0xd800)<<10)+(d-0xdc00);
+      }
+      if(c<0x80){ out.push(c); }
+      else if(c<0x800){ out.push(0xc0|(c>>6),0x80|(c&63)); }
+      else if(c<0x10000){ out.push(0xe0|(c>>12),0x80|((c>>6)&63),0x80|(c&63)); }
+      else{ out.push(0xf0|(c>>18),0x80|((c>>12)&63),0x80|((c>>6)&63),0x80|(c&63)); }
+    }
+    return out;
+  }
+  function appendBits(arr,val,len){ for(var i=len-1;i>=0;i--){ arr.push((val>>>i)&1); } }
+  function bitsToByte(bits,off){ var n=0; for(var i=0;i<8;i++){ n=(n<<1)|bits[off+i]; } return n; }
+  function drawFunctionPatterns(m,f,ver){
+    var size=m.length;
+    finder(m,f,0,0); finder(m,f,size-7,0); finder(m,f,0,size-7);
+    for(var i=0;i<size;i++){
+      setFunc(m,f,6,i,i%2===0); setFunc(m,f,i,6,i%2===0);
+    }
+    alignment(m,f,30,30);
+    setFunc(m,f,8,4*ver+9,true);
+    reserveFormat(f);
+  }
+  function finder(m,f,x,y){
+    for(var dy=-1;dy<=7;dy++) for(var dx=-1;dx<=7;dx++){
+      var xx=x+dx, yy=y+dy;
+      if(yy<0||yy>=m.length||xx<0||xx>=m.length){ continue; }
+      var on=(dx>=0&&dx<=6&&dy>=0&&dy<=6&&(dx===0||dx===6||dy===0||dy===6||(dx>=2&&dx<=4&&dy>=2&&dy<=4)));
+      setFunc(m,f,xx,yy,on);
+    }
+  }
+  function alignment(m,f,cx,cy){
+    for(var dy=-2;dy<=2;dy++) for(var dx=-2;dx<=2;dx++){
+      var d=Math.max(Math.abs(dx),Math.abs(dy));
+      setFunc(m,f,cx+dx,cy+dy,d!==1);
+    }
+  }
+  function setFunc(m,f,x,y,on){ m[y][x]=!!on; f[y][x]=true; }
+  function reserveFormat(f){
+    var size=f.length;
+    for(var i=0;i<9;i++){ if(i!==6){ f[8][i]=true; f[i][8]=true; } }
+    for(i=0;i<8;i++){ f[8][size-1-i]=true; f[size-1-i][8]=true; }
+  }
+  function placeData(m,f,cw){
+    var bits=[];
+    for(var i=0;i<cw.length;i++){ appendBits(bits,cw[i],8); }
+    var size=m.length, bit=0, upward=true;
+    for(var right=size-1;right>=1;right-=2){
+      if(right===6){ right--; }
+      for(var vert=0;vert<size;vert++){
+        var y=upward?size-1-vert:vert;
+        for(var j=0;j<2;j++){
+          var x=right-j;
+          if(!f[y][x]&&bit<bits.length){ m[y][x]=!!bits[bit++]; }
+        }
+      }
+      upward=!upward;
+    }
+  }
+  function applyMask(m,f,mask){
+    for(var y=0;y<m.length;y++) for(var x=0;x<m.length;x++){
+      if(!f[y][x]&&maskBit(mask,x,y)){ m[y][x]=!m[y][x]; }
+    }
+  }
+  function maskBit(mask,x,y){
+    switch(mask){
+      case 0:return (x+y)%2===0; case 1:return y%2===0; case 2:return x%3===0; case 3:return (x+y)%3===0;
+      case 4:return (Math.floor(y/2)+Math.floor(x/3))%2===0; case 5:return ((x*y)%2+(x*y)%3)===0;
+      case 6:return (((x*y)%2+(x*y)%3)%2)===0; default:return (((x+y)%2+(x*y)%3)%2)===0;
+    }
+  }
+  function drawFormatBits(m,f,mask){
+    var bits=formatBits(mask), size=m.length;
+    for(var i=0;i<=5;i++) m[8][i]=!!((bits>>>i)&1);
+    m[8][7]=!!((bits>>>6)&1); m[8][8]=!!((bits>>>7)&1); m[7][8]=!!((bits>>>8)&1);
+    for(i=9;i<15;i++) m[14-i][8]=!!((bits>>>i)&1);
+    for(i=0;i<8;i++) m[size-1-i][8]=!!((bits>>>i)&1);
+    for(i=8;i<15;i++) m[8][size-15+i]=!!((bits>>>i)&1);
+  }
+  function formatBits(mask){
+    var data=(1<<3)|mask, rem=data;
+    rem<<=10;
+    for(var i=14;i>=10;i--){ if(((rem>>>i)&1)!==0){ rem^=0x537<<(i-10); } }
+    return ((data<<10)|rem)^0x5412;
+  }
+  function rsRemainder(data,degree){
+    var gen=rsGenerator(degree), rem=new Array(degree).fill(0);
+    for(var i=0;i<data.length;i++){
+      var factor=data[i]^rem.shift();
+      rem.push(0);
+      for(var j=0;j<degree;j++){ rem[j]^=gfMul(gen[j],factor); }
+    }
+    return rem;
+  }
+  function rsGenerator(degree){
+    var poly=[1];
+    for(var i=0;i<degree;i++){
+      var next=new Array(poly.length+1).fill(0);
+      for(var j=0;j<poly.length;j++){ next[j]^=gfMul(poly[j],gfPow(2,i)); next[j+1]^=poly[j]; }
+      poly=next;
+    }
+    poly.shift();
+    return poly;
+  }
+  function gfMul(x,y){
+    var z=0;
+    for(var i=7;i>=0;i--){ z=(z<<1)^(((z>>>7)&1)*0x11d); if(((y>>>i)&1)!==0){ z^=x; } }
+    return z&255;
+  }
+  function gfPow(x,n){ var y=1; while(n-- >0){ y=gfMul(y,x); } return y; }
+  function cloneMatrix(m){ return m.map(function(r){return r.slice();}); }
+  function qrPenalty(m){
+    var size=m.length, score=0, dark=0;
+    for(var y=0;y<size;y++){
+      var runColor=m[y][0], run=1;
+      for(var x=1;x<size;x++){
+        if(m[y][x]===runColor){ run++; } else { if(run>=5){ score+=run-2; } runColor=m[y][x]; run=1; }
+      }
+      if(run>=5){ score+=run-2; }
+    }
+    for(x=0;x<size;x++){
+      runColor=m[0][x]; run=1;
+      for(y=1;y<size;y++){
+        if(m[y][x]===runColor){ run++; } else { if(run>=5){ score+=run-2; } runColor=m[y][x]; run=1; }
+      }
+      if(run>=5){ score+=run-2; }
+    }
+    for(y=0;y<size-1;y++) for(x=0;x<size-1;x++){
+      var c=m[y][x]; if(c===m[y][x+1]&&c===m[y+1][x]&&c===m[y+1][x+1]){ score+=3; }
+    }
+    var pat=[true,false,true,true,true,false,true,false,false,false,false];
+    for(y=0;y<size;y++) for(x=0;x<=size-11;x++){ if(matchPat(m,y,x,0,1,pat)){ score+=40; } }
+    for(x=0;x<size;x++) for(y=0;y<=size-11;y++){ if(matchPat(m,y,x,1,0,pat)){ score+=40; } }
+    for(y=0;y<size;y++) for(x=0;x<size;x++){ if(m[y][x]){ dark++; } }
+    score+=Math.floor(Math.abs(dark*20-size*size*10)/(size*size))*10;
+    return score;
+  }
+  function matchPat(m,y,x,dy,dx,pat){ for(var i=0;i<pat.length;i++){ if(m[y+dy*i][x+dx*i]!==pat[i]){ return false; } } return true; }
+  function editWifi(){
+    showTab('setup');
+    document.getElementById('ssidInput').focus();
+  }
+  function saveSettings(){
+    state.ssid=document.getElementById('ssidInput').value.trim() || '핫스팟 이름';
+    state.password=document.getElementById('passInput').value;
+    state.security=document.getElementById('secInput').value;
+    save(); render(); toast('저장됨');
+  }
+  load();
+  document.documentElement.setAttribute('data-theme', window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  render();
+  if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
+    navigator.serviceWorker.register('./sw.js').catch(function(){});
+  }
+  document.getElementById('hotspotPill').onclick=function(){ state.hotspot=state.hotspot?0:1; save(); render(); };
+  document.getElementById('editWifi').onclick=editWifi;
+  document.getElementById('saveSettings').onclick=saveSettings;
+  var switches=document.querySelectorAll('[data-toggle]');
+  for(var i=0;i<switches.length;i++){
+    switches[i].onclick=function(){
+      var k=this.getAttribute('data-toggle');
+      state[k]=state[k]?0:1;
+      save(); render();
+    };
+  }
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++){
+    tabs[j].onclick=function(){ showTab(this.getAttribute('data-tab')); };
+  }
+})();
+</script>
+</body>
+</html>

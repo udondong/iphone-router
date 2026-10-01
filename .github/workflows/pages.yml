@@ -22,7 +22,7 @@ jobs:
       - name: Assemble public app files
         run: |
           mkdir -p _site/vendor
-          cp index.html 나라가족_라우터.html manifest.webmanifest sw.js icon.svg icon-180.png icon-192.png icon-512.png _site/
+          cp index.html 나라가족_라우터.html manifest.webmanifest sw.js router-core.js icon.svg icon-180.png icon-192.png icon-512.png _site/
           cp vendor/qrcode.js vendor/qrcode_UTF8.js vendor/LICENSE-qrcode-generator.txt _site/vendor/
           touch _site/.nojekyll
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5

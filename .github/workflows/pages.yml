@@ -19,6 +19,8 @@ jobs:
           node-version: '22'
       - name: Check scripts, assets and offline behavior
         run: node scripts/check.mjs
+      - name: Validate shortcut source
+        run: python3 scripts/build-shortcut.py
       - name: Assemble public app files
         run: |
           mkdir -p _site/vendor

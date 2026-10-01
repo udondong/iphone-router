@@ -159,3 +159,37 @@ assert.equal(core.normalizePlan({ limit: Infinity, resetDay: -1 }).resetDay, 1);
 console.log(
   "Data-cycle boundaries, threshold warnings and record preservation passed",
 );
+// Native handoff must only select a view and expose bounded, transient battery data.
+const handoff = /function receiveShortcut\(\) \{([\s\S]*?)\n        \}\n        load\(\);/.exec(html);
+assert(handoff, "Shortcut handoff missing");
+const views = [], notices = [], consumed = [];
+const bridge = vm.createContext({
+  URLSearchParams,
+  location: { hash: "#view=dock&source=shortcut&battery=82", pathname: "/router.html", search: "" },
+  history: { replaceState(_state, _title, url) { consumed.push(url); } },
+  showTab(name) { views.push(name); },
+  toast(message) { notices.push(message); },
+  shortcutBattery: null, shortcutArrival: false,
+});
+vm.runInContext(`function receiveShortcut() {${handoff[1]}\n}`, bridge);
+vm.runInContext("receiveShortcut()", bridge);
+assert.equal(bridge.shortcutBattery, 82);
+assert.equal(bridge.shortcutArrival, true);
+assert.deepEqual(views, ["dock"]);
+assert.deepEqual(consumed, ["/router.html"]);
+for (const value of ["", "999", "-1", "NaN", "<script>"]) {
+  bridge.location.hash = `#view=dock&source=shortcut&battery=${encodeURIComponent(value)}`;
+  vm.runInContext("receiveShortcut()", bridge);
+  assert.equal(bridge.shortcutBattery, null);
+}
+bridge.location.hash = "#view=dock&battery=82";
+vm.runInContext("receiveShortcut()", bridge);
+assert.equal(bridge.shortcutArrival, false);
+assert.equal(bridge.shortcutBattery, null);
+const before = views.length;
+bridge.location.hash = "#view=invalid&source=shortcut&battery=82";
+vm.runInContext("receiveShortcut()", bridge);
+assert.equal(views.length, before);
+assert(!handoff[1].includes("localStorage"), "Handoff must not modify Wi-Fi state");
+assert(!handoff[1].includes("shortcuts://"), "Handoff must not re-toggle hotspot");
+console.log("Shortcut view routing, transient battery validation and URL consumption passed");

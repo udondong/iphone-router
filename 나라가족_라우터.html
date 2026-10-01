@@ -937,10 +937,10 @@
           </div>
           <a
             class="card quick"
-            href="shortcuts://run-shortcut?name=%ED%95%AB%EC%8A%A4%ED%8C%9F%20%EC%84%A4%EC%A0%95"
+            href="shortcuts://run-shortcut?name=%EB%82%98%EB%9D%BC%EA%B0%80%EC%A1%B1%20%EB%9D%BC%EC%9A%B0%ED%84%B0"
             ><div>
-              <div class="name">핫스팟 설정 단축어</div>
-              <div class="desc">아이폰에 설치한 단축어 실행</div>
+              <div class="name">라우터 켜기 / 끄기</div>
+              <div class="desc">단축어로 전환하고 상태판 열기</div>
             </div>
             <span class="arrow" aria-hidden="true">↗</span></a
           >
@@ -1073,6 +1073,13 @@
             </div>
             <button class="text-btn" data-usage>관리 →</button>
           </div>
+          <div class="card">
+            <div class="sec-title"><h2>버튼 한 번으로 시작</h2><span>iOS 단축어</span></div>
+            <p class="notice">충전 여부와 관계없이 실행할 때마다 핫스팟이 켜짐 / 꺼짐으로 전환되고 마지막에 QR 상태판이 열립니다.</p>
+            <a class="btn primary" href="https://github.com/udondong/iphone-router/releases/download/v2.3.0/Nara-Router.shortcut">단축어 다운로드</a>
+            <div class="notice">다운로드한 파일을 열어 단축어에 추가하고 이름을 ‘나라가족 라우터’로 맞춰 주세요. 단축어의 공유 메뉴에서 ‘홈 화면에 추가’하면 버튼 하나로 실행할 수 있습니다. 최초 실행 시 필요한 접근을 허용해 주세요.</div>
+            <div class="notice">마지막 창은 Safari의 기존 상태판입니다. Safari에 Wi-Fi 정보를 한 번 저장해 주세요. 홈 화면 웹앱과 Safari는 저장 공간이 다를 수 있습니다.</div>
+          </div>
         </section>
         <section class="panel" id="panel-shortcut" aria-label="전체 운영 체크">
           <button class="back" data-home>‹ 연결 화면</button>
@@ -1116,9 +1123,7 @@
           </div>
           <div class="notice">
             iOS 웹앱은 핫스팟을 직접 제어하거나 접속 기기·사용량을 읽을 수
-            없습니다. 호환성 최대화는 필요한 경우에만 켜세요.<br /><br />단축어
-            앱에 ‘핫스팟 설정’이라는 이름의 단축어가 있어야 실행 버튼을 사용할
-            수 있습니다.
+            없습니다. 호환성 최대화는 필요한 경우에만 켜세요.<br /><br />단축어 앱에 ‘나라가족 라우터’를 추가하면 한 번 눌러 핫스팟을 전환하고 이 상태판을 열 수 있습니다.
           </div>
         </section>
 
@@ -1290,10 +1295,10 @@
             ></div>
             <div class="dock-status">
               <div class="dock-stat">
-                <span>핫스팟 · 수동 체크</span><b id="dockHotspot"></b>
+                <span id="dockHotspotLabel">핫스팟 · 수동 체크</span><b id="dockHotspot"></b>
               </div>
               <div class="dock-stat">
-                <span>전원 · 수동 체크</span><b id="dockCharging"></b>
+                <span id="dockPowerLabel">전원 · 수동 체크</span><b id="dockCharging"></b>
               </div>
             </div>
             <div class="dock-usage" id="dockUsage"></div>
@@ -1312,7 +1317,7 @@
       </main>
       <footer class="footer">
         <div id="footerText">아직 저장 전</div>
-        <div>나라가족 5G · v2.2.0</div>
+        <div>나라가족 5G · v2.3.0</div>
       </footer>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1362,6 +1367,8 @@
             return false;
           }
         }
+        var shortcutBattery = null;
+        var shortcutArrival = false;
         var revealed = false;
         function escWifi(s) {
           return String(s || "").replace(/([\\;,":])/g, "\\$1");
@@ -1490,6 +1497,10 @@
           setText("dockSsid", state.ssid || "Wi-Fi를 설정해 주세요");
           setText("dockHotspot", state.hotspot ? "켜짐 체크" : "미확인");
           setText("dockCharging", state.charging ? "충전 체크" : "미확인");
+          setText("dockHotspotLabel", shortcutArrival ? "핫스팟 · 단축어 전환" : "핫스팟 · 수동 체크");
+          setText("dockPowerLabel", shortcutBattery !== null ? "배터리 · 실행 시점" : "전원 · 수동 체크");
+          if (shortcutArrival) setText("dockHotspot", "상태 확인");
+          if (shortcutBattery !== null) setText("dockCharging", shortcutBattery + "%");
           renderUsage();
           updateDiagnostics();
           document.getElementById("ssidInput").value = state.ssid;
@@ -1543,6 +1554,7 @@
           window.scrollTo(0, 0);
         }
         function toggleCheck(k) {
+          if (k === "hotspot") shortcutArrival = false;
           var previous = Object.assign({}, state);
           state[k] = state[k] ? 0 : 1;
           if (!save()) state = previous;
@@ -1999,8 +2011,21 @@
         });
         window.addEventListener("pagehide", releaseWake);
 
+        function receiveShortcut() {
+          var params = new URLSearchParams(location.hash.slice(1));
+          if (params.get("view") !== "dock") return;
+          shortcutArrival = params.get("source") === "shortcut";
+          var value = params.get("battery");
+          shortcutBattery = shortcutArrival && value !== null && /^\d{1,3}$/.test(value) && Number(value) <= 100 ? Number(value) : null;
+          // Consume presentation-only input; never change saved Wi-Fi or toggle iOS from a URL.
+          history.replaceState(null, "", location.pathname + location.search);
+          showTab("dock");
+          if (shortcutArrival) toast("핫스팟을 전환했습니다. 켜짐 / 꺼짐은 제어센터에서 확인해 주세요.");
+        }
         load();
         render();
+        receiveShortcut();
+        window.addEventListener("hashchange", receiveShortcut);
         if (
           "serviceWorker" in navigator &&
           location.protocol.indexOf("http") === 0

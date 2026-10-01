@@ -1,4 +1,4 @@
-const CACHE_NAME = "naragajok-iphone12-router-v2.2.0";
+const CACHE_NAME = "naragajok-iphone12-router-v2.3.0";
 const PREFIX = "naragajok-iphone12-router-";
 const APP_FILES = [
   "./",

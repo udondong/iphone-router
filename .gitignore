@@ -9,7 +9,3 @@ CLAUDE.md
 .omc/
 prd.json
 progress.txt
-
-# 로컬 화면 검증 산출물
-output/
-.playwright-cli/

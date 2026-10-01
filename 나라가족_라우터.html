@@ -1,2102 +1,509 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
-    <meta name="apple-mobile-web-app-title" content="나라가족 5G" />
-    <meta name="theme-color" content="#EFF1F4" id="themeColor" />
-    <meta
-      name="description"
-      content="가족과 편하게 연결하는 iPhone 핫스팟 QR. 연결 정보는 이 기기에 저장되며 오프라인에서도 사용할 수 있습니다."
-    />
-    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png" />
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <title>나라가족 5G Mobile Wi-Fi</title>
-    <style>
-      :root {
-        color-scheme: light;
-        --bg: #eff1f4;
-        --card: #fff;
-        --card2: #f1f3f6;
-        --track: #e4e6eb;
-        --text: #1a1c1e;
-        --sub: #5d6b7b;
-        --blue: #2f6fa7;
-        --green: #267343;
-        --border: #dfe5ed;
-        --ok: #267343;
-        --accent-soft: #ecf3fa;
-        --status-soft: #eaf4ed;
-        --button: #2f6fa7;
-        --danger: #b93232;
-      }
-      [data-theme="dark"] {
-        color-scheme: dark;
-        --bg: #0e0f12;
-        --card: #191b20;
-        --card2: #24272e;
-        --track: #2a2e35;
-        --text: #ecedef;
-        --sub: #adb8c6;
-        --blue: #8fc6f5;
-        --green: #79d2a0;
-        --border: #2d3745;
-        --ok: #79d2a0;
-        --accent-soft: #203248;
-        --status-soft: #203b2d;
-        --button: #376fa0;
-        --danger: #ff9292;
-      }
-      * {
-        box-sizing: border-box;
-        -webkit-tap-highlight-color: transparent;
-      }
-      body {
-        margin: 0;
-        background: var(--bg);
-        color: var(--text);
-        font:
-          15px/1.5 -apple-system,
-          BlinkMacSystemFont,
-          "Apple SD Gothic Neo",
-          sans-serif;
-        font-variant-numeric: tabular-nums;
-      }
-      button,
-      input,
-      select {
-        font: inherit;
-      }
-      button,
-      a,
-      input,
-      select {
-        touch-action: manipulation;
-      }
-      button {
-        cursor: pointer;
-        border: 0;
-        color: inherit;
-      }
-      button:focus-visible,
-      a:focus-visible,
-      input:focus-visible,
-      select:focus-visible {
-        outline: 3px solid var(--blue);
-        outline-offset: 3px;
-      }
-      .shell {
-        max-width: 480px;
-        margin: auto;
-        padding: max(24px, env(safe-area-inset-top)) 22px
-          calc(30px + env(safe-area-inset-bottom));
-      }
-      .top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-      }
-      .eyebrow {
-        font-size: 12px;
-        letter-spacing: 0.13em;
-        font-weight: 700;
-        color: var(--blue);
-      }
-      h1 {
-        font-size: 30px;
-        letter-spacing: -1.2px;
-        line-height: 1.25;
-        margin: 5px 0 0;
-        font-weight: 750;
-      }
-      .sub,
-      .mini {
-        color: var(--sub);
-        font-size: 14px;
-      }
-      .sub {
-        margin-top: 5px;
-      }
-      .icon-btn {
-        color: var(--blue);
-        height: 48px;
-        width: 48px;
-        display: grid;
-        place-items: center;
-        border-radius: 50%;
-        background: var(--card);
-        border: 1px solid var(--border);
-      }
-      .icon-btn svg {
-        width: 22px;
-        height: 22px;
-      }
-      .card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 22px;
-        padding: 22px;
-        margin-top: 16px;
-      }
-      .hero {
-        margin: 0;
-        text-align: center;
-        padding: 24px;
-      }
-      .hero-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        text-align: left;
-        margin-bottom: 20px;
-      }
-      .label {
-        font-size: 12px;
-        letter-spacing: 0.06em;
-        font-weight: 700;
-        color: var(--sub);
-      }
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        min-height: 44px;
-        padding: 0 12px;
-        gap: 7px;
-        background: var(--status-soft);
-        border-radius: 24px;
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--green);
-      }
-      .pill.off {
-        color: var(--sub);
-        background: var(--card2);
-      }
-      .dot {
-        width: 9px;
-        height: 9px;
-        background: currentColor;
-        border-radius: 50%;
-      }
-      .qrbox {
-        width: 228px;
-        height: 228px;
-        margin: 0 auto 19px;
-        background: #fff;
-        border-radius: 20px;
-        border: 1px solid #e4e6eb;
-        display: grid;
-        place-items: center;
-        padding: 14px;
-      }
-      .qrbox svg {
-        width: 100%;
-        height: 100%;
-        shape-rendering: crispEdges;
-      }
-      .qr-fallback {
-        font-size: 14px;
-        color: #626b78;
-        padding: 18px;
-      }
-      .ssid {
-        font-size: 24px;
-        font-weight: 700;
-        letter-spacing: -0.6px;
-        overflow-wrap: anywhere;
-      }
-      .credential {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        margin: 8px 0 5px;
-      }
-      .pass {
-        font-size: 16px;
-        font-family: ui-monospace, SFMono-Regular, monospace;
-        overflow-wrap: anywhere;
-      }
-      .reveal {
-        color: var(--blue);
-        background: var(--accent-soft);
-        border-radius: 10px;
-        min-width: 48px;
-        min-height: 44px;
-        font-size: 14px;
-      }
-      .actions {
-        display: flex;
-        gap: 8px;
-        margin-top: 22px;
-      }
-      .btn {
-        min-height: 48px;
-        padding: 10px 16px;
-        border-radius: 14px;
-        background: var(--card2);
-        font-weight: 650;
-        flex: 1;
-      }
-      .btn.primary {
-        background: var(--button);
-        color: #fff;
-        box-shadow: 0 3px 8px #153d6612;
-      }
-      .text-btn {
-        background: none;
-        min-height: 44px;
-        padding: 8px;
-        color: var(--blue);
-        font-weight: 600;
-      }
-      .quick {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        text-decoration: none;
-        color: inherit;
-      }
-      .quick .name {
-        font-size: 16px;
-        font-weight: 650;
-      }
-      .quick .desc {
-        color: var(--sub);
-        font-size: 14px;
-        margin-top: 3px;
-      }
-      .arrow {
-        font-size: 24px;
-        color: var(--blue);
-      }
-      .sec-title {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
-        gap: 10px;
-      }
-      .sec-title h2 {
-        margin: 0;
-        font-size: 18px;
-        letter-spacing: -0.4px;
-      }
-      .sec-title span {
-        font-size: 14px;
-        color: var(--sub);
-      }
-      .rows {
-        display: grid;
-      }
-      .row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 16px 0;
-        border-bottom: 1px solid var(--border);
-      }
-      .row:last-child {
-        border: 0;
-        padding-bottom: 0;
-      }
-      .row:first-child {
-        padding-top: 0;
-      }
-      .name {
-        font-weight: 600;
-      }
-      .desc {
-        font-size: 14px;
-        color: var(--sub);
-        margin-top: 3px;
-      }
-      .switch {
-        flex-shrink: 0;
-        min-width: 56px;
-        height: 44px;
-        border-radius: 24px;
-        padding: 9px 5px;
-        background: var(--track);
-      }
-      .switch i {
-        display: block;
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        background: #fff;
-        box-shadow: 0 1px 4px #0002;
-        transition: transform 0.15s;
-      }
-      .switch.on {
-        background: #267343;
-      }
-      .switch.on i {
-        transform: translateX(20px);
-      }
-      .panel {
-        display: none;
-      }
-      .panel.active {
-        display: block;
-      }
-      .back {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background: none;
-        padding: 0;
-        min-height: 44px;
-        color: var(--blue);
-        font-weight: 600;
-        margin-bottom: 14px;
-      }
-      .form {
-        display: grid;
-        gap: 18px;
-      }
-      .field {
-        display: grid;
-        gap: 7px;
-      }
-      .field label {
-        font-size: 14px;
-        font-weight: 600;
-      }
-      .field input,
-      .field select {
-        width: 100%;
-        min-width: 0;
-        min-height: 50px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: var(--card2);
-        color: var(--text);
-        padding: 10px 13px;
-      }
-      .notice {
-        font-size: 14px;
-        color: var(--sub);
-        line-height: 1.6;
-        margin-top: 18px;
-      }
-      .footer {
-        font-size: 12px;
-        color: var(--sub);
-        text-align: center;
-        margin-top: 22px;
-      }
-      .toast {
-        position: fixed;
-        left: 50%;
-        bottom: calc(24px + env(safe-area-inset-bottom));
-        transform: translateX(-50%);
-        background: var(--text);
-        color: var(--bg);
-        border-radius: 16px;
-        padding: 12px 18px;
-        max-width: calc(100% - 32px);
-        width: max-content;
-        opacity: 0;
-        pointer-events: none;
-        z-index: 10;
-      }
-      .toast.show {
-        opacity: 1;
-      }
-      .error {
-        color: var(--danger);
-        font-size: 14px;
-        margin: 0;
-      }
-      .offline {
-        display: none;
-        font-size: 14px;
-        color: var(--sub);
-        margin-bottom: 14px;
-      }
-      .offline.show {
-        display: block;
-      }
-      @media (max-width: 360px) {
-        .shell {
-          padding-left: 16px;
-          padding-right: 16px;
-        }
-        .hero {
-          padding: 20px;
-        }
-        .qrbox {
-          width: 210px;
-          height: 210px;
-        }
-        h1 {
-          font-size: 28px;
-        }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        * {
-          transition: none !important;
-        }
-      }
-
-      [hidden] {
-        display: none !important;
-      }
-      .hero {
-        box-shadow: 0 6px 24px #1e3a5608;
-      }
-      .quick {
-        background: var(--accent-soft);
-        border-color: transparent;
-      }
-      .btn:disabled {
-        opacity: 0.5;
-        cursor: default;
-        box-shadow: none;
-      }
-      button:not(:disabled):active,
-      a.quick:active {
-        filter: brightness(0.94);
-      }
-      .theme-options {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        padding: 4px;
-        gap: 4px;
-        background: var(--card2);
-        border-radius: 15px;
-      }
-      .theme-option {
-        min-height: 44px;
-        border-radius: 11px;
-        background: transparent;
-        color: var(--sub);
-        font-weight: 600;
-        font-size: 14px;
-      }
-      .theme-option[aria-pressed="true"] {
-        background: var(--card);
-        color: var(--blue);
-        box-shadow: 0 1px 5px #0000000c;
-      }
-      .update-banner {
-        background: var(--accent-soft);
-        border-radius: 14px;
-        padding: 10px 14px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        margin-bottom: 14px;
-        font-size: 14px;
-      }
-      .install-help {
-        margin-top: 18px;
-        border-top: 1px solid var(--border);
-        padding-top: 14px;
-      }
-      .install-help summary {
-        cursor: pointer;
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-weight: 600;
-        font-size: 14px;
-      }
-      .install-help summary::after {
-        content: "＋";
-        color: var(--blue);
-      }
-      .install-help[open] summary::after {
-        content: "−";
-      }
-      .install-help p {
-        color: var(--sub);
-        font-size: 14px;
-        margin: 4px 0 0;
-        line-height: 1.7;
-      }
-      @media (min-width: 700px) {
-        .shell {
-          padding-top: 48px;
-          padding-bottom: 48px;
-        }
-      }
-
-      .tools {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-top: 16px;
-      }
-      .tool {
-        min-height: 54px;
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        color: var(--blue);
-        font-weight: 650;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-      }
-      .tool svg {
-        width: 21px;
-        height: 21px;
-      }
-      .usage-heading {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-      }
-      .usage-heading h2 {
-        margin: 0;
-        font-size: 18px;
-      }
-      .usage-value {
-        font-size: 34px;
-        font-weight: 750;
-        line-height: 1.3;
-        margin: 12px 0 2px;
-        letter-spacing: -0.8px;
-      }
-      .usage-value small {
-        font-size: 16px;
-        font-weight: 500;
-        color: var(--sub);
-        margin-left: 5px;
-      }
-      .progress-track {
-        height: 12px;
-        border-radius: 6px;
-        background: var(--track);
-        overflow: hidden;
-        margin: 16px 0 10px;
-      }
-      .progress-track i {
-        display: block;
-        height: 100%;
-        border-radius: 6px;
-        width: 0;
-        background: var(--blue);
-      }
-      .usage-card[data-status="near"] .progress-track i {
-        background: #b26a15;
-      }
-      .usage-card[data-status="over"] .progress-track i {
-        background: var(--danger);
-      }
-      .usage-note {
-        font-size: 14px;
-        color: var(--sub);
-        margin-top: 8px;
-      }
-      .usage-card[data-status="over"] .usage-note {
-        color: var(--danger);
-      }
-      .usage-meta {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        font-size: 14px;
-        color: var(--sub);
-      }
-      .usage-meta b {
-        color: var(--text);
-        font-weight: 600;
-      }
-      .diagnostic .row {
-        align-items: flex-start;
-      }
-      .check-badge {
-        font-size: 14px;
-        font-weight: 600;
-        white-space: nowrap;
-        color: var(--blue);
-      }
-      .check-badge[data-tone="ok"] {
-        color: var(--green);
-      }
-      .check-badge[data-tone="warn"] {
-        color: var(--danger);
-      }
-      .guide summary {
-        min-height: 48px;
-        cursor: pointer;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .guide summary::after {
-        content: "＋";
-        color: var(--blue);
-      }
-      .guide[open] summary::after {
-        content: "−";
-      }
-      .guide ol {
-        padding-left: 22px;
-        margin: 2px 0 14px;
-        color: var(--sub);
-        font-size: 14px;
-        line-height: 1.7;
-      }
-      .guide li {
-        margin: 8px 0;
-      }
-      .guide a {
-        color: var(--blue);
-      }
-      body.dock-mode .top,
-      body.dock-mode .footer,
-      body.dock-mode #offline,
-      body.dock-mode #updateBanner {
-        display: none;
-      }
-      body.dock-mode .shell {
-        max-width: 920px;
-        padding: max(14px, env(safe-area-inset-top)) 16px
-          max(14px, env(safe-area-inset-bottom));
-      }
-      #panel-dock.active {
-        display: grid;
-        grid-template-rows: auto minmax(0, 1fr) auto;
-        gap: 12px;
-        height: calc(
-          100vh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)
-        );
-        height: calc(
-          100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)
-        );
-      }
-      .dock-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-      }
-      .dock-header h2 {
-        font-size: 22px;
-        margin: 0;
-      }
-      .dock-header .btn {
-        flex: 0;
-        white-space: nowrap;
-      }
-      .dock-center {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        border: 1px solid var(--border);
-        background: var(--card);
-        border-radius: 22px;
-        padding: 16px;
-        min-height: 0;
-      }
-      .dock-ssid {
-        font-size: 28px;
-        font-weight: 750;
-        letter-spacing: -0.7px;
-        overflow-wrap: anywhere;
-        width: 100%;
-        line-height: 1.25;
-      }
-      .dock-qr {
-        width: min(72vw, 38vh, 300px);
-        height: min(72vw, 38vh, 300px);
-        min-height: 0;
-        margin: 14px 0;
-        background: #fff;
-        border: 1px solid #e4e6eb;
-        border-radius: 18px;
-        padding: 12px;
-        display: grid;
-        place-items: center;
-      }
-      .dock-qr svg {
-        width: 100%;
-        height: 100%;
-        shape-rendering: crispEdges;
-      }
-      .dock-status {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        width: 100%;
-      }
-      .dock-stat {
-        background: var(--card2);
-        border-radius: 14px;
-        padding: 10px;
-      }
-      .dock-stat span {
-        display: block;
-        color: var(--sub);
-        font-size: 14px;
-      }
-      .dock-stat b {
-        font-size: 18px;
-      }
-      .dock-footer {
-        display: grid;
-        gap: 6px;
-      }
-      .dock-footer .actions {
-        margin: 0;
-      }
-      .dock-footer .mini {
-        font-size: 14px;
-        text-align: center;
-      }
-      .dock-usage {
-        margin-top: 10px;
-        color: var(--sub);
-        font-size: 14px;
-      }
-      @media (orientation: landscape) and (max-height: 600px) {
-        .dock-center {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 10px;
-        }
-        .dock-qr {
-          grid-row: 1/4;
-          grid-column: 1;
-          width: min(38vh, 190px);
-          height: min(38vh, 190px);
-          margin: auto;
-        }
-        .dock-ssid {
-          font-size: 24px;
-        }
-        .dock-status {
-          grid-column: 2;
-        }
-        .dock-usage {
-          grid-column: 2;
-          margin: 0;
-        }
-      }
-      @media (max-height: 650px) and (orientation: portrait) {
-        .dock-ssid {
-          font-size: 22px;
-        }
-        .dock-qr {
-          width: min(52vw, 26vh, 210px);
-          height: min(52vw, 26vh, 210px);
-          margin: 10px 0;
-          flex-shrink: 0;
-        }
-        .dock-stat {
-          padding: 8px;
-        }
-        .dock-stat b {
-          font-size: 16px;
-        }
-        .dock-usage {
-          margin-top: 6px;
-        }
-        .dock-center {
-          padding: 12px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="shell">
-      <header class="top">
-        <div>
-          <div class="eyebrow">PERSONAL HOTSPOT</div>
-          <h1>가족과 연결</h1>
-          <div class="sub">iPhone · 나만의 작은 라우터</div>
-        </div>
-        <button class="icon-btn" id="editWifi" aria-label="Wi-Fi 설정 열기">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-          >
-            <path d="M4 7h16M4 17h16" />
-            <circle cx="9" cy="7" r="3" fill="var(--card)" />
-            <circle cx="15" cy="17" r="3" fill="var(--card)" />
-          </svg>
-        </button>
-      </header>
-      <div class="update-banner" id="updateBanner" hidden>
-        <span>새 버전이 준비됐습니다</span
-        ><button class="text-btn" id="reloadApp">새로고침</button>
-      </div>
-      <div id="offline" class="offline" role="status">
-        오프라인 · 저장된 연결 정보를 사용할 수 있습니다.
-      </div>
-      <main>
-        <section
-          class="panel active"
-          id="panel-connect"
-          aria-label="Wi-Fi 연결"
-        >
-          <div class="card hero">
-            <div class="hero-top">
-              <span class="label">WI-FI CONNECTION</span
-              ><button
-                class="pill"
-                id="hotspotPill"
-                aria-label="수동 핫스팟 체크 변경"
-              >
-                <span class="dot"></span><span id="hotspotText">미확인</span>
-              </button>
-            </div>
-            <div class="qrbox" id="qrBox" aria-label="와이파이 접속 QR"></div>
-            <div class="ssid" id="ssidView">Wi-Fi를 설정해 주세요</div>
-            <div class="credential">
-              <span class="pass" id="passView">비밀번호 미설정</span
-              ><button class="reveal" id="revealPass" aria-pressed="false">
-                보기
-              </button>
-            </div>
-            <div class="mini" id="securityView">
-              카메라로 QR을 스캔해 연결하세요
-            </div>
-            <div class="actions">
-              <button class="btn primary" id="copyPassword">
-                비밀번호 복사</button
-              ><button class="btn" id="editWifiHero">편집</button>
-            </div>
-          </div>
-          <div class="tools">
-            <button class="tool" id="openDock">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-              >
-                <rect x="4" y="3" width="16" height="14" rx="3" />
-                <path d="M9 21h6m-3-4v4" /></svg
-              >거치 상태판</button
-            ><button class="tool" id="openDiagnostics">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-              >
-                <circle cx="10.5" cy="10.5" r="6.5" />
-                <path d="m16 16 4 4M8 10.5l2 2 3-4" /></svg
-              >연결 점검
-            </button>
-          </div>
-          <div class="card usage-card" id="usageCard" hidden>
-            <div class="usage-heading">
-              <h2>이번 주기 사용량</h2>
-              <button class="text-btn" data-usage>기록</button>
-            </div>
-            <div class="usage-value" id="usageValue">기록 필요</div>
-            <div class="mini" id="usagePeriod"></div>
-            <div
-              class="progress-track"
-              role="progressbar"
-              id="usageProgress"
-              aria-label="수동 기록 기준 데이터 사용률"
-            >
-              <i id="usageFill"></i>
-            </div>
-            <div class="usage-meta">
-              <span id="usageLimit"></span><b id="usageRemaining"></b>
-            </div>
-            <div
-              class="usage-note"
-              id="usageNote"
-              role="status"
-              aria-live="polite"
-            ></div>
-          </div>
-          <a
-            class="card quick"
-            href="shortcuts://run-shortcut?name=%ED%95%AB%EC%8A%A4%ED%8C%9F%20%EC%84%A4%EC%A0%95"
-            ><div>
-              <div class="name">핫스팟 설정 단축어</div>
-              <div class="desc">아이폰에 설치한 단축어 실행</div>
-            </div>
-            <span class="arrow" aria-hidden="true">↗</span></a
-          >
-          <div class="card">
-            <div class="sec-title">
-              <h2>운영 체크</h2>
-              <span id="readyText">0/4 확인</span>
-            </div>
-            <div class="rows">
-              <div class="row">
-                <div>
-                  <div class="name">개인용 핫스팟</div>
-                  <div class="desc">설정에서 켠 뒤 체크해 주세요</div>
-                </div>
-                <button
-                  class="switch"
-                  data-toggle="hotspot"
-                  role="switch"
-                  aria-label="개인용 핫스팟 확인"
-                  aria-checked="false"
-                >
-                  <i></i>
-                </button>
-              </div>
-              <div class="row">
-                <div>
-                  <div class="name">충전 연결</div>
-                  <div class="desc">전원 연결 상태 확인</div>
-                </div>
-                <button
-                  class="switch"
-                  data-toggle="charging"
-                  role="switch"
-                  aria-label="충전 연결 확인"
-                  aria-checked="false"
-                >
-                  <i></i>
-                </button>
-              </div>
-            </div>
-            <button class="text-btn" id="moreChecks">전체 체크 보기 →</button>
-            <div class="mini">체크 상태는 직접 기록한 값입니다.</div>
-            <details class="install-help">
-              <summary>홈 화면에서 앱처럼 사용하기</summary>
-              <p>
-                Safari 공유 메뉴에서 ‘홈 화면에 추가’를 선택해 주세요. 한 번
-                온라인으로 열면 저장된 QR을 오프라인에서도 볼 수 있습니다.
-              </p>
-            </details>
-          </div>
-        </section>
-        <section class="panel" id="panel-setup" aria-label="설정">
-          <button class="back" data-home>‹ 연결 화면</button>
-          <div class="card">
-            <div class="sec-title">
-              <h2>Wi-Fi 설정</h2>
-              <span>이 기기에 저장</span>
-            </div>
-            <form class="form" id="settingsForm">
-              <div class="field">
-                <label for="ssidInput">Wi-Fi 이름</label
-                ><input
-                  id="ssidInput"
-                  autocomplete="off"
-                  autocapitalize="none"
-                  spellcheck="false"
-                  required
-                  maxlength="32"
-                  placeholder="아이폰의 이름"
-                />
-              </div>
-              <div class="field">
-                <label for="passInput">비밀번호</label
-                ><input
-                  id="passInput"
-                  type="password"
-                  autocomplete="off"
-                  autocapitalize="none"
-                  spellcheck="false"
-                  maxlength="63"
-                  placeholder="핫스팟 비밀번호"
-                />
-              </div>
-              <div class="field">
-                <label for="secInput">보안</label
-                ><select id="secInput">
-                  <option value="WPA">WPA / WPA2</option>
-                  <option value="nopass">암호 없음</option>
-                </select>
-              </div>
-              <p class="error" id="formError" role="alert" hidden></p>
-              <button class="btn primary" id="saveSettings" type="submit">
-                저장하고 연결 화면으로
-              </button>
-            </form>
-            <div class="notice">
-              아이폰 설정에 표시된 이름과 비밀번호를 입력해 주세요. 정보는 이
-              브라우저에만 저장됩니다.
-            </div>
-          </div>
-          <div class="card">
-            <div class="sec-title"><h2>화면 스타일</h2></div>
-            <div class="theme-options" role="group" aria-label="화면 테마">
-              <button
-                class="theme-option"
-                data-theme-choice="system"
-                aria-pressed="true"
-              >
-                자동</button
-              ><button
-                class="theme-option"
-                data-theme-choice="light"
-                aria-pressed="false"
-              >
-                라이트</button
-              ><button
-                class="theme-option"
-                data-theme-choice="dark"
-                aria-pressed="false"
-              >
-                다크
-              </button>
-            </div>
-            <div class="notice">자동은 아이폰의 화면 모드를 따릅니다.</div>
-          </div>
-          <div class="card quick">
-            <div>
-              <div class="name">데이터 주기·한도</div>
-              <div class="desc">통신사 사용량을 직접 기록</div>
-            </div>
-            <button class="text-btn" data-usage>관리 →</button>
-          </div>
-        </section>
-        <section class="panel" id="panel-shortcut" aria-label="전체 운영 체크">
-          <button class="back" data-home>‹ 연결 화면</button>
-          <div class="card">
-            <div class="sec-title">
-              <h2>추가 운영 체크</h2>
-              <span>직접 확인</span>
-            </div>
-            <div class="rows">
-              <div class="row">
-                <div>
-                  <div class="name">호환성 최대화</div>
-                  <div class="desc">연결이 어려운 기기가 있을 때 켜세요</div>
-                </div>
-                <button
-                  class="switch"
-                  data-toggle="compat"
-                  role="switch"
-                  aria-label="호환성 최대화 확인"
-                  aria-checked="false"
-                >
-                  <i></i>
-                </button>
-              </div>
-              <div class="row">
-                <div>
-                  <div class="name">가족 기기 자동 연결</div>
-                  <div class="desc">아이폰의 가족 공유 설정 확인</div>
-                </div>
-                <button
-                  class="switch"
-                  data-toggle="family"
-                  role="switch"
-                  aria-label="가족 자동 연결 확인"
-                  aria-checked="false"
-                >
-                  <i></i>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="notice">
-            iOS 웹앱은 핫스팟을 직접 제어하거나 접속 기기·사용량을 읽을 수
-            없습니다. 호환성 최대화는 필요한 경우에만 켜세요.<br /><br />단축어
-            앱에 ‘핫스팟 설정’이라는 이름의 단축어가 있어야 실행 버튼을 사용할
-            수 있습니다.
-          </div>
-        </section>
-
-        <section class="panel" id="panel-usage" aria-label="데이터 기록">
-          <button class="back" data-home>‹ 연결 화면</button>
-          <div class="card">
-            <div class="sec-title">
-              <h2>데이터 주기·한도</h2>
-              <span>수동 기록</span>
-            </div>
-            <form class="form" id="usageForm">
-              <div class="field">
-                <label for="limitInput">주기별 한도 (GB)</label
-                ><input
-                  id="limitInput"
-                  type="number"
-                  min="0"
-                  max="1000000"
-                  step="0.01"
-                  inputmode="decimal"
-                  placeholder="비워두면 표시 안 함"
-                />
-              </div>
-              <div class="field">
-                <label for="resetInput">매월 시작일 (1~28일)</label
-                ><input
-                  id="resetInput"
-                  type="number"
-                  min="1"
-                  max="28"
-                  step="1"
-                  inputmode="numeric"
-                  required
-                />
-              </div>
-              <div class="field">
-                <label for="usedInput">이번 주기 누적 사용량 (GB)</label
-                ><input
-                  id="usedInput"
-                  type="number"
-                  min="0"
-                  max="1000000"
-                  step="0.01"
-                  inputmode="decimal"
-                  placeholder="통신사 앱에서 확인한 값"
-                />
-              </div>
-              <p class="mini" id="usageInputPeriod"></p>
-              <p class="error" id="usageError" role="alert" hidden></p>
-              <button class="btn primary" type="submit">기록 저장</button>
-            </form>
-            <div class="notice">
-              이 앱은 사용량을 측정하지 않습니다. 통신사 앱에서 확인한 누적 값을
-              기록해 주세요. 새 주기가 시작되면 ‘기록 필요’로 표시하며 이전
-              기록을 보존합니다. 사용량을 비워두면 그 주기의 기존 기록을
-              유지합니다.
-            </div>
-          </div>
-        </section>
-        <section class="panel" id="panel-diagnostics" aria-label="연결 점검">
-          <button class="back" data-home>‹ 연결 화면</button>
-          <div class="card diagnostic">
-            <div class="sec-title">
-              <h2>연결 점검</h2>
-              <button class="text-btn" id="retryDiagnostics">다시 확인</button>
-            </div>
-            <div class="rows">
-              <div class="row">
-                <div>
-                  <div class="name">Wi-Fi 연결 정보</div>
-                  <div class="desc" id="diagWifiHint"></div>
-                </div>
-                <span class="check-badge" id="diagWifi"></span>
-              </div>
-              <div class="row">
-                <div>
-                  <div class="name">인터넷 응답</div>
-                  <div class="desc">이 기기에서 웹 연결을 확인합니다</div>
-                </div>
-                <span
-                  class="check-badge"
-                  id="diagInternet"
-                  role="status"
-                  aria-live="polite"
-                  >확인 전</span
-                >
-              </div>
-              <div class="row">
-                <div>
-                  <div class="name">개인용 핫스팟</div>
-                  <div class="desc">아이폰 설정에서 직접 확인</div>
-                </div>
-                <span class="check-badge" id="diagHotspot"></span>
-              </div>
-              <div class="row">
-                <div>
-                  <div class="name">충전 연결</div>
-                  <div class="desc">전원 연결을 직접 확인</div>
-                </div>
-                <span class="check-badge" id="diagCharging"></span>
-              </div>
-            </div>
-            <div class="notice">
-              인터넷 응답은 이 브라우저 기준입니다. 다른 기기의 핫스팟 접속
-              상태는 자동으로 확인할 수 없습니다.
-            </div>
-            <button class="text-btn" id="fixWifi">Wi-Fi 정보 편집 →</button>
-          </div>
-          <div class="card">
-            <div class="sec-title"><h2>연결이 어려울 때</h2></div>
-            <details class="guide">
-              <summary>핫스팟이 보이지 않아요</summary>
-              <ol>
-                <li>
-                  아이폰의 설정 → 개인용 핫스팟에서 ‘다른 사람의 연결 허용’을 켜
-                  주세요.
-                </li>
-                <li>
-                  연결이 끝날 때까지 개인용 핫스팟 설정 화면을 열어 두세요.
-                </li>
-                <li>연결할 기기의 Wi-Fi를 껐다 켜고 다시 선택해 주세요.</li>
-              </ol>
-            </details>
-            <details class="guide">
-              <summary>QR을 읽어도 연결되지 않아요</summary>
-              <ol>
-                <li>
-                  설정 → 일반 → 정보 → 이름과 개인용 핫스팟의 Wi-Fi 암호가 이
-                  앱의 정보와 같은지 확인해 주세요.
-                </li>
-                <li>암호를 바꿨다면 이 앱에서도 수정해 QR을 갱신해 주세요.</li>
-                <li>
-                  연결할 기기의 기존 Wi-Fi 정보를 지운 뒤 다시 스캔해 주세요.
-                </li>
-              </ol>
-            </details>
-            <details class="guide">
-              <summary>기기가 계속 연결되지 않아요</summary>
-              <ol>
-                <li>
-                  iPhone 12 이후 모델에서는 개인용 핫스팟의 ‘호환성 최대화’를
-                  시도해 보세요. 연결 성능이 낮아질 수 있으므로 필요한 경우에만
-                  켜 주세요.
-                </li>
-                <li>아이폰과 연결할 기기를 재시동한 뒤 다시 시도해 주세요.</li>
-                <li>
-                  <a
-                    href="https://support.apple.com/ko-kr/119837"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >Apple의 핫스팟 연결 안내 보기 ↗</a
-                  >
-                </li>
-              </ol>
-            </details>
-          </div>
-        </section>
-        <section class="panel" id="panel-dock" aria-label="거치 상태판">
-          <div class="dock-header">
-            <h2>라우터 상태판</h2>
-            <button class="btn" data-home>닫기</button>
-          </div>
-          <div class="dock-center">
-            <div class="dock-ssid" id="dockSsid"></div>
-            <div
-              class="dock-qr"
-              id="dockQr"
-              aria-label="거치용 Wi-Fi 접속 QR"
-            ></div>
-            <div class="dock-status">
-              <div class="dock-stat">
-                <span>핫스팟 · 수동 체크</span><b id="dockHotspot"></b>
-              </div>
-              <div class="dock-stat">
-                <span>전원 · 수동 체크</span><b id="dockCharging"></b>
-              </div>
-            </div>
-            <div class="dock-usage" id="dockUsage"></div>
-          </div>
-          <div class="dock-footer">
-            <div class="actions">
-              <button class="btn" id="keepAwake" aria-pressed="false">
-                화면 유지 켜기
-              </button>
-            </div>
-            <div class="mini" id="wakeStatus">
-              충전 연결을 확인한 뒤 사용할 수 있습니다.
-            </div>
-          </div>
-        </section>
-      </main>
-      <footer class="footer">
-        <div id="footerText">아직 저장 전</div>
-        <div>나라가족 5G · v2.2.0</div>
-      </footer>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="나라가족 5G">
+<meta name="theme-color" content="#EFF1F4">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>나라가족 5G Mobile Wi-Fi</title>
+<style>
+  :root{
+    --bg:#EFF1F4; --card:#FFFFFF; --card2:#F1F3F6; --track:#E4E6EB;
+    --text:#1A1C1E; --sub:#8B9097; --muted:#AAB0B7;
+    --blue:#2E8DEE; --green:#00AE42; --ok:#1FAE64; --red:#E8453C; --amber:#F5A623;
+    --shadow:0 6px 20px rgba(22,32,58,.07); --border:rgba(20,28,38,.08);
+  }
+  [data-theme="dark"]{
+    --bg:#0E0F12; --card:#191B20; --card2:#24272E; --track:#2A2E35;
+    --text:#ECEDEF; --sub:#9AA0A8; --muted:#71767F;
+    --blue:#4C9DF5; --green:#36C07B; --ok:#36C07B; --red:#FF5B52;
+    --shadow:0 10px 26px rgba(0,0,0,.34); --border:rgba(255,255,255,.07);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-text-size-adjust:100%;}
+  html,body{margin:0; min-height:100%; background:var(--bg); color:var(--text);}
+  body{
+    font-family:-apple-system,"SF Pro","Apple SD Gothic Neo","NanumGothic","Malgun Gothic",system-ui,sans-serif;
+    max-width:430px; margin:0 auto;
+    padding:max(24px,env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom));
+    font-variant-numeric:tabular-nums;
+  }
+  button,input,select{font:inherit;}
+  button{border:0; color:inherit; cursor:pointer;}
+  .top{display:flex; align-items:flex-start; justify-content:space-between; margin:2px 2px 20px;}
+  .eyebrow{font-size:12px; font-weight:800; color:var(--green); letter-spacing:.02em;}
+  h1{font-size:24px; line-height:1.12; margin:4px 0 0; letter-spacing:0; font-weight:900;}
+  .sub{font-size:13px; color:var(--sub); margin-top:5px;}
+  .pill{display:inline-flex; align-items:center; height:30px; padding:0 11px; border-radius:999px; background:rgba(0,174,66,.12); color:var(--green); font-size:12px; font-weight:800;}
+  .pill.off{background:var(--card2); color:var(--sub);}
+  .dot{width:8px; height:8px; border-radius:50%; background:currentColor; margin-right:7px;}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:22px; box-shadow:var(--shadow); padding:18px; margin-top:16px;}
+  .hero{padding:14px;}
+  .hero-grid{display:grid; grid-template-columns:142px 1fr; column-gap:13px; align-items:stretch;}
+  .qrbox{background:#fff; border-radius:18px; min-height:142px; display:flex; align-items:center; justify-content:center; padding:10px; border:1px solid rgba(0,0,0,.08);}
+  .qrbox svg{display:block; width:122px; height:122px;}
+  .qr-fallback{font-size:11px; line-height:1.35; color:#1A1C1E; word-break:break-all; text-align:left;}
+  .stack{display:flex; flex-direction:column; height:100%;}
+  .label{font-size:11px; color:var(--sub); font-weight:800; text-transform:uppercase; letter-spacing:.04em;}
+  .ssid{font-size:20px; font-weight:900; margin-top:4px; line-height:1.1; overflow-wrap:anywhere;}
+  .pass{font-size:16px; font-weight:800; color:var(--blue); margin-top:4px; overflow-wrap:anywhere;}
+  .mini{font-size:12px; color:var(--sub); line-height:1.42;}
+  .actions{display:grid; grid-template-columns:1fr 1fr; column-gap:8px; margin-top:auto; padding-top:10px;}
+  .btn{height:42px; border-radius:14px; font-weight:900; background:var(--card2); color:var(--text);}
+  .btn.primary{background:var(--green); color:#fff;}
+  .btn.blue{background:var(--blue); color:#fff;}
+  .sec-title{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
+  .sec-title h2{font-size:15px; margin:0; font-weight:900;}
+  .sec-title span{font-size:12px; color:var(--sub); font-weight:700;}
+  .rows{display:grid; row-gap:8px;}
+  .row{display:grid; grid-template-columns:1fr auto; align-items:center; column-gap:12px; min-height:50px; background:var(--card2); border-radius:14px; padding:12px 13px;}
+  .row .name{font-size:13px; font-weight:800;}
+  .row .desc{font-size:12px; color:var(--sub); margin-top:2px;}
+  .state{font-size:12px; font-weight:900; color:var(--sub);}
+  .state.ok{color:var(--ok);}
+  .state.warn{color:var(--amber);}
+  .state.bad{color:var(--red);}
+  .switch{width:52px; height:30px; border-radius:999px; background:var(--track); padding:3px; transition:.15s background;}
+  .switch i{display:block; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,.18); transition:.15s transform;}
+  .switch.on{background:var(--green);}
+  .switch.on i{transform:translateX(22px);}
+  .usage-grid{display:grid; grid-template-columns:112px 1fr; column-gap:13px; align-items:center;}
+  .ring{width:112px; height:112px; position:relative;}
+  .ring svg{width:112px; height:112px; display:block;}
+  .ring-center{position:absolute; left:0; top:0; width:112px; height:112px; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .big{font-size:25px; line-height:1; font-weight:900; letter-spacing:0;}
+  .big small{font-size:12px; color:var(--sub); margin-left:2px;}
+  .cap{font-size:11px; color:var(--sub); margin-top:3px;}
+  .metric{display:grid; row-gap:8px;}
+  .mrow{display:grid; grid-template-columns:1fr auto; column-gap:10px; align-items:baseline;}
+  .mrow span{font-size:12px; color:var(--sub); font-weight:800;}
+  .mrow b{font-size:14px; font-weight:900;}
+  .bar{height:12px; background:var(--track); border-radius:7px; overflow:hidden;}
+  .bar i{display:block; height:100%; width:0; background:var(--blue); border-radius:7px;}
+  .tabs{display:grid; grid-template-columns:1fr 1fr 1fr; column-gap:6px; margin-top:12px;}
+  .tab{height:39px; border-radius:14px; background:var(--card2); color:var(--sub); font-size:13px; font-weight:900;}
+  .tab.active{background:var(--blue); color:#fff;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .form{display:grid; row-gap:9px;}
+  .field{display:grid; grid-template-columns:95px 1fr; align-items:center; column-gap:10px;}
+  .field label{font-size:13px; color:var(--sub); font-weight:800;}
+  .field input,.field select{height:42px; border:0; outline:0; border-radius:14px; padding:0 12px; background:var(--card2); color:var(--text); font-weight:800; min-width:0;}
+  .notice{font-size:12px; line-height:1.45; color:var(--sub); background:var(--card2); border-radius:14px; padding:11px; margin-top:10px;}
+  .footer{font-size:11px; color:var(--muted); text-align:center; margin:14px 0 0;}
+  .toast{position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom)); transform:translateX(-50%) translateY(20px); opacity:0; background:#1A1C1E; color:#fff; padding:10px 14px; border-radius:999px; font-size:13px; font-weight:800; box-shadow:0 8px 24px rgba(0,0,0,.25); transition:.18s opacity,.18s transform; pointer-events:none; z-index:10;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  @media (max-width:370px){
+    body{padding-left:12px; padding-right:12px;}
+    .hero-grid{grid-template-columns:128px 1fr; column-gap:10px;}
+    .qrbox{min-height:128px;}
+    .qrbox img{width:108px; height:108px;}
+    .ssid{font-size:18px;}
+  }
+</style>
+<script>
+(function(){try{
+  var c=document.createElement('canvas');c.width=c.height=180;
+  var x=c.getContext('2d');
+  x.fillStyle='#00AE42';x.fillRect(0,0,180,180);
+  x.strokeStyle='#fff';x.lineCap='round';
+  var s=7*Math.PI/6,e=11*Math.PI/6,cy=113;
+  [[63,13],[41,13],[19,13]].forEach(function(a){x.lineWidth=a[1];x.beginPath();x.arc(90,cy,a[0],s,e);x.stroke();});
+  x.fillStyle='#fff';x.beginPath();x.arc(90,cy,8,0,2*Math.PI);x.fill();
+  var l=document.createElement('link');l.rel='apple-touch-icon';l.sizes='180x180';l.href=c.toDataURL();
+  document.head.appendChild(l);
+}catch(e){}})();
+</script>
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>나라가족 5G Mobile Wi-Fi</h1>
+      <div class="sub">연결 정보와 운영 체크만 빠르게 확인</div>
     </div>
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./router-core.js"></script>
-    <script src="./vendor/qrcode.js"></script>
-    <script src="./vendor/qrcode_UTF8.js"></script>
-    <script>
-      (function () {
-        var KEY = "naragajok-iphone12-hotspot-v1";
-        var state = {
-          ssid: "",
-          password: "",
-          security: "WPA",
-          hotspot: 0,
-          compat: 0,
-          charging: 0,
-          family: 0,
-          updated: "",
-          theme: "system",
-          plan: RouterCore.normalizePlan(null),
-        };
-        function load() {
-          try {
-            var saved = JSON.parse(localStorage.getItem(KEY) || "{}");
-            if (!saved || typeof saved !== "object") return;
-            ["ssid", "password", "updated"].forEach(function (k) {
-              if (typeof saved[k] === "string") state[k] = saved[k];
-            });
-            ["hotspot", "compat", "charging", "family"].forEach(function (k) {
-              state[k] = saved[k] === 1 || saved[k] === true ? 1 : 0;
-            });
-            state.plan = RouterCore.normalizePlan(saved.plan);
-            if (saved.security === "nopass") state.security = "nopass";
-            if (["system", "light", "dark"].indexOf(saved.theme) !== -1)
-              state.theme = saved.theme;
-          } catch (e) {}
-        }
-        function save() {
-          state.updated = new Date().toISOString();
-          try {
-            localStorage.setItem(KEY, JSON.stringify(state));
-            return true;
-          } catch (e) {
-            toast(
-              "저장 공간에 접근할 수 없습니다. 브라우저 설정을 확인해 주세요.",
-            );
-            return false;
-          }
-        }
-        var revealed = false;
-        function escWifi(s) {
-          return String(s || "").replace(/([\\;,":])/g, "\\$1");
-        }
-        function wifiString() {
-          var auth = state.security === "nopass" ? "nopass" : "WPA";
-          return (
-            "WIFI:T:" +
-            auth +
-            ";S:" +
-            escWifi(state.ssid) +
-            ";P:" +
-            escWifi(state.password) +
-            ";;"
-          );
-        }
-        function makeQrSvg(text) {
-          var qr = makeQrMatrix(text);
-          if (!qr) {
-            return '<div class="qr-fallback">연결 정보가 너무 길어 QR을 만들 수 없습니다. Wi-Fi 이름을 줄여 주세요.</div>';
-          }
-          var pad = 4,
-            size = qr.length,
-            out = [];
-          out.push(
-            '<svg viewBox="0 0 ' +
-              (size + pad * 2) +
-              " " +
-              (size + pad * 2) +
-              '" role="img" aria-label="Wi-Fi QR" xmlns="http://www.w3.org/2000/svg">',
-          );
-          out.push('<rect width="100%" height="100%" fill="#fff"/>');
-          out.push('<path fill="#111" d="');
-          for (var y = 0; y < size; y++) {
-            for (var x = 0; x < size; x++) {
-              if (qr[y][x]) {
-                out.push("M" + (x + pad) + " " + (y + pad) + "h1v1h-1z");
-              }
-            }
-          }
-          out.push('"/></svg>');
-          return out.join("");
-        }
-        function fmtTime(iso) {
-          if (!iso) {
-            return "아직 저장 전";
-          }
-          var d = new Date(iso);
-          if (isNaN(d.getTime())) {
-            return "아직 저장 전";
-          }
-          var hh = ("0" + d.getHours()).slice(-2);
-          var mm = ("0" + d.getMinutes()).slice(-2);
-          return (
-            (d.toDateString() === new Date().toDateString()
-              ? "오늘"
-              : d.getMonth() + 1 + "월 " + d.getDate() + "일") +
-            " " +
-            hh +
-            ":" +
-            mm
-          );
-        }
-        function setText(id, txt) {
-          document.getElementById(id).textContent = txt;
-        }
-        function setSwitch(k) {
-          var el = document.querySelector('[data-toggle="' + k + '"]');
-          if (el) {
-            el.className = "switch" + (state[k] ? " on" : "");
-            el.setAttribute("aria-checked", String(!!state[k]));
-          }
-        }
-        function render() {
-          applyTheme();
-          setText("ssidView", state.ssid || "Wi-Fi를 설정해 주세요");
-          setText(
-            "passView",
-            state.security === "nopass"
-              ? "암호 없음"
-              : state.password
-                ? revealed
-                  ? state.password
-                  : "••••••••"
-                : "비밀번호 미설정",
-          );
-          setText(
-            "securityView",
-            state.ssid && (state.security === "nopass" || state.password)
-              ? (state.security === "nopass" ? "암호 없음" : "WPA / WPA2") +
-                  " · 카메라로 QR 스캔"
-              : "아이폰 설정의 Wi-Fi 정보를 입력해 주세요",
-          );
-          var qr = document.getElementById("qrBox");
-          qr.innerHTML =
-            state.ssid && (state.security === "nopass" || state.password)
-              ? makeQrSvg(wifiString())
-              : '<div class="qr-fallback">첫 연결을 준비해 볼까요?<br>Wi-Fi 정보를 입력하면<br>여기에 QR이 표시됩니다.</div>';
-          document.getElementById("revealPass").textContent = revealed
-            ? "숨기기"
-            : "보기";
-          document
-            .getElementById("revealPass")
-            .setAttribute("aria-pressed", String(revealed));
-          document.getElementById("revealPass").hidden =
-            !state.password || state.security === "nopass";
-          document.getElementById("copyPassword").disabled =
-            !state.password || state.security === "nopass";
-          var pill = document.getElementById("hotspotPill");
-          pill.className = "pill" + (state.hotspot ? "" : " off");
-          setText("hotspotText", state.hotspot ? "켜짐 체크" : "미확인");
-          pill.setAttribute("aria-pressed", String(!!state.hotspot));
-          setSwitch("hotspot");
-          setSwitch("compat");
-          setSwitch("charging");
-          setSwitch("family");
-          var checked =
-            (state.hotspot ? 1 : 0) +
-            (state.compat ? 1 : 0) +
-            (state.charging ? 1 : 0) +
-            (state.family ? 1 : 0);
-          setText("readyText", checked + "/4 확인");
-          setText("footerText", "마지막 저장 · " + fmtTime(state.updated));
+    <button class="pill" id="hotspotPill" type="button"><span class="dot"></span><span id="hotspotText">켜짐</span></button>
+  </header>
 
-          document.getElementById("dockQr").innerHTML = qr.innerHTML;
-          setText("dockSsid", state.ssid || "Wi-Fi를 설정해 주세요");
-          setText("dockHotspot", state.hotspot ? "켜짐 체크" : "미확인");
-          setText("dockCharging", state.charging ? "충전 체크" : "미확인");
-          renderUsage();
-          updateDiagnostics();
-          document.getElementById("ssidInput").value = state.ssid;
-          document.getElementById("passInput").value = state.password;
-          document.getElementById("secInput").value = state.security;
-        }
-        function toast(msg) {
-          var t = document.getElementById("toast");
-          t.textContent = msg;
-          t.className = "toast show";
-          clearTimeout(toast.timer);
-          toast.timer = setTimeout(function () {
-            t.className = "toast";
-          }, 2800);
-        }
-        function copyText(txt) {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(txt).then(
-              function () {
-                toast("복사됨");
-              },
-              function () {
-                prompt("복사할 내용", txt);
-              },
-            );
-          } else {
-            prompt("복사할 내용", txt);
-          }
-        }
-        var view = "connect";
-        var wakeWanted = false,
-          wakeLock = null,
-          wakePending = false,
-          wakeGeneration = 0;
-        var diagnosticGeneration = 0;
-        function showTab(name) {
-          if (view === "dock" && name !== "dock") releaseWake();
-          view = name;
-          document.body.classList.toggle("dock-mode", name === "dock");
-          document.querySelectorAll(".panel").forEach(function (panel) {
-            panel.classList.toggle("active", panel.id === "panel-" + name);
-          });
-          if (name !== "connect") {
-            revealed = false;
-            render();
-          }
-          if (name === "usage") fillUsageForm();
-          if (name === "diagnostics") runDiagnostics();
-          if (name === "dock") updateWakeStatus();
-          if (name !== "diagnostics") diagnosticGeneration++;
-          window.scrollTo(0, 0);
-        }
-        function toggleCheck(k) {
-          var previous = Object.assign({}, state);
-          state[k] = state[k] ? 0 : 1;
-          if (!save()) state = previous;
-          render();
-          if (!state.charging) releaseWake();
-        }
-        var systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
-        function applyTheme() {
-          var theme =
-            state.theme === "system"
-              ? systemTheme.matches
-                ? "dark"
-                : "light"
-              : state.theme;
-          document.documentElement.setAttribute("data-theme", theme);
-          document.getElementById("themeColor").content =
-            theme === "dark" ? "#0E0F12" : "#EFF1F4";
-          document
-            .querySelectorAll("[data-theme-choice]")
-            .forEach(function (button) {
-              button.setAttribute(
-                "aria-pressed",
-                String(button.dataset.themeChoice === state.theme),
-              );
-            });
-        }
-        function makeQrMatrix(text) {
-          try {
-            var qr = qrcode(0, "M");
-            qr.addData(text, "Byte");
-            qr.make();
-            var size = qr.getModuleCount(),
-              matrix = [];
-            for (var y = 0; y < size; y++) {
-              matrix[y] = [];
-              for (var x = 0; x < size; x++) matrix[y][x] = qr.isDark(y, x);
-            }
-            return matrix;
-          } catch (e) {
-            return null;
-          }
-        }
-        function utf8Bytes(s) {
-          var out = [];
-          for (var i = 0; i < s.length; i++) {
-            var c = s.charCodeAt(i);
-            if (c >= 0xd800 && c <= 0xdbff && i + 1 < s.length) {
-              var d = s.charCodeAt(++i);
-              c = 0x10000 + ((c - 0xd800) << 10) + (d - 0xdc00);
-            }
-            if (c < 0x80) {
-              out.push(c);
-            } else if (c < 0x800) {
-              out.push(0xc0 | (c >> 6), 0x80 | (c & 63));
-            } else if (c < 0x10000) {
-              out.push(
-                0xe0 | (c >> 12),
-                0x80 | ((c >> 6) & 63),
-                0x80 | (c & 63),
-              );
-            } else {
-              out.push(
-                0xf0 | (c >> 18),
-                0x80 | ((c >> 12) & 63),
-                0x80 | ((c >> 6) & 63),
-                0x80 | (c & 63),
-              );
-            }
-          }
-          return out;
-        }
-        function editWifi() {
-          showTab("setup");
-          document.getElementById("ssidInput").focus();
-        }
-        function saveSettings(event) {
-          event.preventDefault();
-          var ssid = document.getElementById("ssidInput").value.trim(),
-            password = document.getElementById("passInput").value,
-            security = document.getElementById("secInput").value;
-          var error = document.getElementById("formError");
-          var message = !ssid
-            ? "Wi-Fi 이름을 입력해 주세요."
-            : utf8Bytes(ssid).length > 32
-              ? "Wi-Fi 이름은 UTF-8 기준 32바이트 이내로 입력해 주세요."
-              : security === "WPA" &&
-                  (password.length < 8 ||
-                    password.length > 63 ||
-                    /[^\x20-\x7E]/.test(password))
-                ? "비밀번호는 영문·숫자·기호 8~63자로 입력해 주세요."
-                : "";
-          var old = state;
-          state = Object.assign({}, state, {
-            ssid: ssid,
-            password: security === "nopass" ? "" : password,
-            security: security,
-          });
-          if (!message && !makeQrMatrix(wifiString()))
-            message =
-              "연결 정보가 너무 깁니다. Wi-Fi 이름이나 비밀번호를 줄여 주세요.";
-          if (message) {
-            state = old;
-            error.textContent = message;
-            error.hidden = false;
-            return;
-          }
-          if (!save()) {
-            state = old;
-            return;
-          }
-          error.hidden = true;
-          revealed = false;
-          render();
-          showTab("connect");
-          toast("연결 정보를 저장했습니다");
-        }
+  <main>
+    <section class="card hero">
+      <div class="hero-grid">
+        <div class="qrbox" id="qrBox" aria-label="와이파이 접속 QR"></div>
+        <div class="stack">
+          <div class="label">Wi-Fi 이름</div>
+          <div class="ssid" id="ssidView">핫스팟 이름</div>
+          <div class="pass" id="passView">암호 입력</div>
+          <div class="mini" id="securityView">WPA/WPA2 · 카메라로 QR 스캔</div>
+          <div class="actions" style="grid-template-columns:1fr;">
+            <button class="btn primary" id="editWifi" type="button">수정</button>
+          </div>
+        </div>
+      </div>
+      <div class="notice">QR은 이 파일 안에서 직접 생성됩니다. 외부 서버나 인터넷 연결 없이도 저장된 Wi-Fi 이름과 비밀번호로 작동합니다.</div>
+    </section>
 
-        function formatGB(value) {
-          return (
-            value.toLocaleString("ko-KR", { maximumFractionDigits: 2 }) + " GB"
-          );
-        }
-        function periodText(period) {
-          return (
-            period.start.getMonth() +
-            1 +
-            "월 " +
-            period.start.getDate() +
-            "일 — " +
-            (period.end.getMonth() + 1) +
-            "월 " +
-            period.end.getDate() +
-            "일"
-          );
-        }
-        function renderUsage() {
-          var usage = RouterCore.summary(state.plan, new Date());
-          document.getElementById("usageCard").hidden = !state.plan.limit;
-          document.getElementById("usageCard").dataset.status = usage.status;
-          setText(
-            "usageValue",
-            usage.record ? formatGB(usage.record.used) : "기록 필요",
-          );
-          setText("usagePeriod", periodText(usage.period) + " · 수동 기록");
-          setText("usageLimit", "한도 " + formatGB(state.plan.limit));
-          setText(
-            "usageRemaining",
-            usage.remaining === null
-              ? "잔여량 미확인"
-              : formatGB(usage.remaining) + " 남음",
-          );
-          var progress = document.getElementById("usageProgress");
-          var percent =
-            usage.ratio === null
-              ? 0
-              : Math.min(100, Math.max(0, usage.ratio * 100));
-          document.getElementById("usageFill").style.width = percent + "%";
-          progress.setAttribute("aria-valuemin", "0");
-          progress.setAttribute("aria-valuemax", "100");
-          if (usage.ratio === null) progress.removeAttribute("aria-valuenow");
-          else
-            progress.setAttribute("aria-valuenow", String(Math.round(percent)));
-          var note =
-            usage.status === "over"
-              ? "설정한 한도에 도달했습니다. 통신사 잔여량을 확인해 주세요."
-              : usage.status === "near"
-                ? "기록한 사용량이 한도의 80% 이상입니다."
-                : usage.record
-                  ? "기록 기준 · " + fmtTime(usage.record.updated)
-                  : "이번 주기의 사용량을 기록해 주세요. 이전 주기 기록은 보존됩니다.";
-          setText("usageNote", note);
-          progress.setAttribute(
-            "aria-valuetext",
-            usage.record
-              ? Math.round(usage.ratio * 100) + "% · 수동 기록"
-              : "사용량 기록 필요",
-          );
-          setText(
-            "dockUsage",
-            !state.plan.limit
-              ? "사용량은 설정에서 직접 기록할 수 있습니다."
-              : usage.record
-                ? "수동 기록 " +
-                  formatGB(usage.record.used) +
-                  " / " +
-                  formatGB(state.plan.limit)
-                : "이번 주기 사용량 · 기록 필요",
-          );
-        }
-        var usageEditCycle = null;
-        function fillUsageForm() {
-          var usage = RouterCore.summary(state.plan, new Date());
-          usageEditCycle = usage.period.key;
-          document.getElementById("limitInput").value = state.plan.limit || "";
-          document.getElementById("resetInput").value = state.plan.resetDay;
-          document.getElementById("usedInput").value = usage.record
-            ? usage.record.used
-            : "";
-          setText(
-            "usageInputPeriod",
-            periodText(usage.period) + " · 이번 주기 누적 값",
-          );
-          document.getElementById("usageError").hidden = true;
-        }
-        function saveUsage(event) {
-          event.preventDefault();
-          var parsed = RouterCore.parsePlan(
-            document.getElementById("limitInput").value,
-            document.getElementById("resetInput").value,
-            document.getElementById("usedInput").value,
-          );
-          var error = document.getElementById("usageError");
-          if (parsed.error) {
-            error.textContent = parsed.error;
-            error.hidden = false;
-            return;
-          }
-          var currentPeriod = RouterCore.cycle(new Date(), parsed.resetDay);
-          if (
-            parsed.used !== null &&
-            usageEditCycle &&
-            usageEditCycle !== currentPeriod.key
-          ) {
-            usageEditCycle = currentPeriod.key;
-            setText(
-              "usageInputPeriod",
-              periodText(currentPeriod) + " · 이번 주기 누적 값",
-            );
-            error.textContent =
-              "데이터 주기가 바뀌었습니다. 입력한 값이 새 주기의 사용량인지 확인 후 다시 저장해 주세요.";
-            error.hidden = false;
-            return;
-          }
-          var previous = JSON.parse(JSON.stringify(state));
-          var plan = RouterCore.normalizePlan(state.plan);
-          plan.limit = parsed.limit;
-          plan.resetDay = parsed.resetDay;
-          if (parsed.used !== null) {
-            var period = RouterCore.cycle(new Date(), plan.resetDay);
-            plan.records[period.key] = {
-              used: parsed.used,
-              updated: new Date().toISOString(),
-            };
-          }
-          state.plan = plan;
-          if (!save()) {
-            state = previous;
-            return;
-          }
-          render();
-          showTab("connect");
-          toast("데이터 기록을 저장했습니다");
-        }
-        function badge(id, text, tone) {
-          var element = document.getElementById(id);
-          element.textContent = text;
-          element.dataset.tone = tone;
-        }
-        function updateDiagnostics() {
-          var ready = !!(
-            state.ssid &&
-            (state.security === "nopass" || state.password)
-          );
-          badge(
-            "diagWifi",
-            ready ? "준비됨" : "입력 필요",
-            ready ? "ok" : "warn",
-          );
-          setText(
-            "diagWifiHint",
-            ready
-              ? "QR을 생성할 수 있는 저장 정보가 있습니다"
-              : "Wi-Fi 이름과 비밀번호를 입력해 주세요",
-          );
-          badge(
-            "diagHotspot",
-            state.hotspot ? "켜짐 체크" : "수동 확인",
-            state.hotspot ? "ok" : "manual",
-          );
-          badge(
-            "diagCharging",
-            state.charging ? "충전 체크" : "수동 확인",
-            state.charging ? "ok" : "manual",
-          );
-        }
-        async function runDiagnostics() {
-          var generation = ++diagnosticGeneration;
-          updateDiagnostics();
-          badge("diagInternet", "확인 중", "manual");
-          document.getElementById("retryDiagnostics").disabled = true;
-          var controller = new AbortController(),
-            timer = setTimeout(function () {
-              controller.abort();
-            }, 4000);
-          try {
-            if (!navigator.onLine) throw new Error("offline");
-            var response = await fetch(
-              "./index.html?connection-check=" + Date.now(),
-              { method: "HEAD", cache: "no-store", signal: controller.signal },
-            );
-            if (generation === diagnosticGeneration)
-              badge(
-                "diagInternet",
-                response.ok ? "응답 확인" : "확인 필요",
-                response.ok ? "ok" : "warn",
-              );
-          } catch (e) {
-            if (generation === diagnosticGeneration)
-              badge(
-                "diagInternet",
-                navigator.onLine ? "응답 없음" : "오프라인",
-                "warn",
-              );
-          } finally {
-            clearTimeout(timer);
-            if (generation === diagnosticGeneration)
-              document.getElementById("retryDiagnostics").disabled = false;
-          }
-        }
-        function updateWakeStatus() {
-          var active = !!(wakeLock && !wakeLock.released),
-            button = document.getElementById("keepAwake");
-          button.setAttribute("aria-pressed", String(active));
-          button.textContent = active
-            ? "화면 유지 끄기"
-            : wakePending
-              ? "화면 유지 요청 중"
-              : "화면 유지 켜기";
-          button.disabled =
-            wakePending || !state.charging || !("wakeLock" in navigator);
-          setText(
-            "wakeStatus",
-            !("wakeLock" in navigator)
-              ? "이 브라우저는 화면 유지를 지원하지 않습니다."
-              : !state.charging
-                ? "홈에서 충전 연결을 직접 확인한 뒤 사용해 주세요."
-                : active
-                  ? "화면 유지 중 · 상태판을 닫으면 해제됩니다."
-                  : "충전 확인 상태에서만 사용하세요. 실제 전원은 자동 감지하지 않습니다.",
-          );
-        }
-        async function requestWake() {
-          if (
-            wakePending ||
-            (wakeLock && !wakeLock.released) ||
-            !wakeWanted ||
-            view !== "dock" ||
-            !state.charging ||
-            document.visibilityState !== "visible" ||
-            !navigator.wakeLock
-          )
-            return;
-          var generation = wakeGeneration;
-          wakePending = true;
-          updateWakeStatus();
-          try {
-            var lock = await navigator.wakeLock.request("screen");
-            if (
-              generation !== wakeGeneration ||
-              !wakeWanted ||
-              view !== "dock" ||
-              !state.charging
-            ) {
-              await lock.release();
-              return;
-            }
-            wakeLock = lock;
-            lock.addEventListener("release", function () {
-              if (wakeLock === lock) {
-                wakeLock = null;
-                updateWakeStatus();
-              }
-            });
-          } catch (e) {
-            if (generation === wakeGeneration) {
-              wakeWanted = false;
-              toast(
-                "Safari가 화면 유지를 허용하지 않았습니다. 화면은 자동으로 꺼질 수 있습니다.",
-              );
-            }
-          } finally {
-            wakePending = false;
-            updateWakeStatus();
-          }
-        }
-        function releaseWake() {
-          wakeWanted = false;
-          wakeGeneration++;
-          var lock = wakeLock;
-          wakeLock = null;
-          if (lock && !lock.released) lock.release().catch(function () {});
-          updateWakeStatus();
-        }
-        document.getElementById("openDock").onclick = function () {
-          showTab("dock");
-        };
-        document.getElementById("openDiagnostics").onclick = function () {
-          showTab("diagnostics");
-        };
-        document.getElementById("retryDiagnostics").onclick = runDiagnostics;
-        document.getElementById("fixWifi").onclick = editWifi;
-        document.querySelectorAll("[data-usage]").forEach(function (button) {
-          button.onclick = function () {
-            showTab("usage");
-          };
-        });
-        document.getElementById("usageForm").onsubmit = saveUsage;
-        document.getElementById("resetInput").onchange = function () {
-          var day = Number(this.value);
-          if (!Number.isInteger(day) || day < 1 || day > 28) return;
-          var period = RouterCore.cycle(new Date(), day),
-            record = state.plan.records[period.key];
-          usageEditCycle = period.key;
-          setText(
-            "usageInputPeriod",
-            periodText(period) + " · 이번 주기 누적 값",
-          );
-          document.getElementById("usedInput").value = record
-            ? record.used
-            : "";
-        };
-        document.getElementById("keepAwake").onclick = function () {
-          if (wakeWanted) releaseWake();
-          else {
-            wakeWanted = true;
-            requestWake();
-          }
-        };
-        var dayTimer;
-        function scheduleDayRefresh() {
-          clearTimeout(dayTimer);
-          if (document.visibilityState !== "visible") return;
-          var now = new Date(),
-            next = new Date(
-              now.getFullYear(),
-              now.getMonth(),
-              now.getDate() + 1,
-            );
-          dayTimer = setTimeout(
-            function () {
-              renderUsage();
-              scheduleDayRefresh();
-            },
-            next.getTime() - now.getTime() + 100,
-          );
-        }
-        scheduleDayRefresh();
-        document.addEventListener("visibilitychange", function () {
-          scheduleDayRefresh();
-          if (document.visibilityState === "visible") {
-            renderUsage();
-            if (wakeWanted) requestWake();
-          }
-        });
-        window.addEventListener("pagehide", releaseWake);
+    <nav class="tabs" aria-label="화면 전환">
+      <button class="tab active" data-tab="connect" type="button">연결</button>
+      <button class="tab" data-tab="shortcut" type="button">단축어</button>
+      <button class="tab" data-tab="setup" type="button">설정</button>
+    </nav>
 
-        load();
-        render();
-        if (
-          "serviceWorker" in navigator &&
-          location.protocol.indexOf("http") === 0
-        ) {
-          var hadController = !!navigator.serviceWorker.controller;
-          navigator.serviceWorker
-            .register("./sw.js", { updateViaCache: "none" })
-            .catch(function () {
-              toast("오프라인 준비를 완료하지 못했습니다");
-            });
-          navigator.serviceWorker.addEventListener(
-            "controllerchange",
-            function () {
-              if (hadController)
-                document.getElementById("updateBanner").hidden = false;
-            },
-          );
+    <section class="panel active" id="panel-connect">
+      <div class="card">
+        <div class="sec-title"><h2>운영 체크</h2><span id="readyText">3/4 확인</span></div>
+        <div class="rows">
+          <div class="row">
+            <div><div class="name">개인용 핫스팟</div><div class="desc">아이폰 설정에서 켜 둔 상태</div></div>
+            <button class="switch on" data-toggle="hotspot" type="button"><i></i></button>
+          </div>
+          <div class="row">
+            <div><div class="name">호환성 최대화</div><div class="desc">Android/구형 기기가 안 붙을 때 사용</div></div>
+            <button class="switch" data-toggle="compat" type="button"><i></i></button>
+          </div>
+          <div class="row">
+            <div><div class="name">충전 연결</div><div class="desc">핫스팟 전용 운용은 상시 전원 권장</div></div>
+            <button class="switch on" data-toggle="charging" type="button"><i></i></button>
+          </div>
+          <div class="row">
+            <div><div class="name">가족 기기 자동 연결</div><div class="desc">Apple 기기는 같은 계정/가족 공유가 가장 편함</div></div>
+            <button class="switch on" data-toggle="family" type="button"><i></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-shortcut">
+      <div class="card">
+        <div class="sec-title"><h2>단축어</h2><span>버튼을 누르면 바로 실행</span></div>
+        <div class="rows">
+          <a class="row" href="shortcuts://run-shortcut?name=%ED%95%AB%EC%8A%A4%ED%8C%9F%20%EC%84%A4%EC%A0%95" style="text-decoration:none;color:inherit;">
+            <div><div class="name">핫스팟 설정</div><div class="desc">개인용 핫스팟 켜기 / 끄기</div></div>
+            <span class="state ok">실행 ›</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-setup">
+      <div class="card">
+        <div class="sec-title"><h2>기본 설정</h2><span>홈 화면 저장</span></div>
+        <div class="form">
+          <div class="field"><label for="ssidInput">Wi-Fi 이름</label><input id="ssidInput" autocomplete="off"></div>
+          <div class="field"><label for="passInput">비밀번호</label><input id="passInput" autocomplete="off"></div>
+          <div class="field"><label for="secInput">보안</label><select id="secInput"><option value="WPA">WPA/WPA2</option><option value="nopass">암호 없음</option></select></div>
+          <button class="btn primary" id="saveSettings" type="button">저장</button>
+        </div>
+        <div class="notice">iOS 웹앱은 핫스팟 상태와 사용량을 자동으로 읽지 못합니다. 이 화면은 전용기기 운영을 위한 수동 체크판입니다.</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer" id="footerText">마지막 업데이트 -</div>
+  <div class="toast" id="toast">복사됨</div>
+
+<script>
+(function(){
+  var KEY='naragajok-iphone12-hotspot-v1';
+  var state={
+    ssid:'핫스팟 이름',
+    password:'',
+    security:'WPA',
+    hotspot:1,
+    compat:0,
+    charging:1,
+    family:1,
+    updated:''
+  };
+  function load(){
+    try{
+      var saved=JSON.parse(localStorage.getItem(KEY) || '{}');
+      for(var k in saved){ if(Object.prototype.hasOwnProperty.call(state,k)){ state[k]=saved[k]; } }
+    }catch(e){}
+  }
+  function save(){
+    state.updated=new Date().toISOString();
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+  function escWifi(s){
+    return String(s || '').replace(/([\\;,":])/g,'\\$1');
+  }
+  function wifiString(){
+    var auth=state.security === 'nopass' ? 'nopass' : 'WPA';
+    return 'WIFI:T:' + auth + ';S:' + escWifi(state.ssid) + ';P:' + escWifi(state.password) + ';;';
+  }
+  function makeQrSvg(text){
+    var qr=makeQrMatrix(text);
+    if(!qr){ return '<div class="qr-fallback">'+escapeHtml(wifiString())+'</div>'; }
+    var scale=4, pad=4, size=qr.length, out=[];
+    out.push('<svg viewBox="0 0 '+(size+pad*2)+' '+(size+pad*2)+'" role="img" aria-label="Wi-Fi QR" xmlns="http://www.w3.org/2000/svg">');
+    out.push('<rect width="100%" height="100%" fill="#fff"/>');
+    out.push('<path fill="#111" d="');
+    for(var y=0;y<size;y++){
+      for(var x=0;x<size;x++){
+        if(qr[y][x]){ out.push('M'+(x+pad)+' '+(y+pad)+'h1v1h-1z'); }
+      }
+    }
+    out.push('"/></svg>');
+    return out.join('');
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+  }
+  function fmtTime(iso){
+    if(!iso){ return '아직 저장 전'; }
+    var d=new Date(iso);
+    if(isNaN(d.getTime())){ return '아직 저장 전'; }
+    var hh=('0'+d.getHours()).slice(-2);
+    var mm=('0'+d.getMinutes()).slice(-2);
+    return '오늘 ' + hh + ':' + mm;
+  }
+  function setText(id, txt){ document.getElementById(id).textContent=txt; }
+  function setSwitch(k){
+    var el=document.querySelector('[data-toggle="'+k+'"]');
+    if(el){ el.className='switch' + (state[k] ? ' on' : ''); }
+  }
+  function render(){
+    setText('ssidView', state.ssid || '핫스팟 이름');
+    setText('passView', state.password ? state.password : '비밀번호 입력');
+    setText('securityView', (state.security === 'nopass' ? '암호 없음' : 'WPA/WPA2') + ' · 카메라로 QR 스캔');
+    var qr=document.getElementById('qrBox');
+    qr.innerHTML=makeQrSvg(wifiString());
+    var pill=document.getElementById('hotspotPill');
+    pill.className='pill' + (state.hotspot ? '' : ' off');
+    setText('hotspotText', state.hotspot ? '켜짐' : '꺼짐');
+    setSwitch('hotspot'); setSwitch('compat'); setSwitch('charging'); setSwitch('family');
+    var checked=(state.hotspot?1:0)+(state.compat?1:0)+(state.charging?1:0)+(state.family?1:0);
+    setText('readyText', checked + '/4 확인');
+    setText('footerText', '마지막 업데이트 ' + fmtTime(state.updated));
+
+    document.getElementById('ssidInput').value=state.ssid;
+    document.getElementById('passInput').value=state.password;
+    document.getElementById('secInput').value=state.security;
+  }
+  function toast(msg){
+    var t=document.getElementById('toast');
+    t.textContent=msg;
+    t.className='toast show';
+    setTimeout(function(){ t.className='toast'; },1400);
+  }
+  function copyText(txt){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ toast('복사됨'); },function(){ prompt('복사할 내용', txt); });
+    }else{
+      prompt('복사할 내용', txt);
+    }
+  }
+  function showTab(name){
+    var tabs=document.querySelectorAll('.tab');
+    var panels=document.querySelectorAll('.panel');
+    for(var i=0;i<tabs.length;i++){ tabs[i].className='tab' + (tabs[i].getAttribute('data-tab')===name ? ' active' : ''); }
+    for(var j=0;j<panels.length;j++){ panels[j].className='panel' + (panels[j].id==='panel-'+name ? ' active' : ''); }
+  }
+  function makeQrMatrix(text){
+    var ver=5, size=37, dataCap=108, eccLen=26;
+    var bytes=utf8Bytes(text);
+    if(bytes.length>106){ return null; }
+    var bits=[];
+    appendBits(bits,4,4);
+    appendBits(bits,bytes.length,8);
+    for(var i=0;i<bytes.length;i++){ appendBits(bits,bytes[i],8); }
+    var totalBits=dataCap*8;
+    appendBits(bits,0,Math.min(4,totalBits-bits.length));
+    while(bits.length%8!==0){ bits.push(0); }
+    var data=[];
+    for(i=0;i<bits.length;i+=8){ data.push(bitsToByte(bits,i)); }
+    for(var pad=0xec;data.length<dataCap;pad=pad===0xec?0x11:0xec){ data.push(pad); }
+    var codewords=data.concat(rsRemainder(data,eccLen));
+    var base=[], func=[];
+    for(var y=0;y<size;y++){ base[y]=[]; func[y]=[]; for(var x=0;x<size;x++){ base[y][x]=false; func[y][x]=false; } }
+    drawFunctionPatterns(base,func,ver);
+    placeData(base,func,codewords);
+    var best=null,bestScore=1e9,bestMask=0;
+    for(var mask=0;mask<8;mask++){
+      var m=cloneMatrix(base);
+      applyMask(m,func,mask);
+      drawFormatBits(m,func,mask);
+      var score=qrPenalty(m);
+      if(score<bestScore){ bestScore=score; best=m; bestMask=mask; }
+    }
+    drawFormatBits(best,func,bestMask);
+    return best;
+  }
+  function utf8Bytes(s){
+    var out=[];
+    for(var i=0;i<s.length;i++){
+      var c=s.charCodeAt(i);
+      if(c>=0xd800&&c<=0xdbff&&i+1<s.length){
+        var d=s.charCodeAt(++i);
+        c=0x10000+((c-0xd800)<<10)+(d-0xdc00);
+      }
+      if(c<0x80){ out.push(c); }
+      else if(c<0x800){ out.push(0xc0|(c>>6),0x80|(c&63)); }
+      else if(c<0x10000){ out.push(0xe0|(c>>12),0x80|((c>>6)&63),0x80|(c&63)); }
+      else{ out.push(0xf0|(c>>18),0x80|((c>>12)&63),0x80|((c>>6)&63),0x80|(c&63)); }
+    }
+    return out;
+  }
+  function appendBits(arr,val,len){ for(var i=len-1;i>=0;i--){ arr.push((val>>>i)&1); } }
+  function bitsToByte(bits,off){ var n=0; for(var i=0;i<8;i++){ n=(n<<1)|bits[off+i]; } return n; }
+  function drawFunctionPatterns(m,f,ver){
+    var size=m.length;
+    finder(m,f,0,0); finder(m,f,size-7,0); finder(m,f,0,size-7);
+    for(var i=0;i<size;i++){
+      setFunc(m,f,6,i,i%2===0); setFunc(m,f,i,6,i%2===0);
+    }
+    alignment(m,f,30,30);
+    setFunc(m,f,8,4*ver+9,true);
+    reserveFormat(f);
+  }
+  function finder(m,f,x,y){
+    for(var dy=-1;dy<=7;dy++) for(var dx=-1;dx<=7;dx++){
+      var xx=x+dx, yy=y+dy;
+      if(yy<0||yy>=m.length||xx<0||xx>=m.length){ continue; }
+      var on=(dx>=0&&dx<=6&&dy>=0&&dy<=6&&(dx===0||dx===6||dy===0||dy===6||(dx>=2&&dx<=4&&dy>=2&&dy<=4)));
+      setFunc(m,f,xx,yy,on);
+    }
+  }
+  function alignment(m,f,cx,cy){
+    for(var dy=-2;dy<=2;dy++) for(var dx=-2;dx<=2;dx++){
+      var d=Math.max(Math.abs(dx),Math.abs(dy));
+      setFunc(m,f,cx+dx,cy+dy,d!==1);
+    }
+  }
+  function setFunc(m,f,x,y,on){ m[y][x]=!!on; f[y][x]=true; }
+  function reserveFormat(f){
+    var size=f.length;
+    for(var i=0;i<9;i++){ if(i!==6){ f[8][i]=true; f[i][8]=true; } }
+    for(i=0;i<8;i++){ f[8][size-1-i]=true; f[size-1-i][8]=true; }
+  }
+  function placeData(m,f,cw){
+    var bits=[];
+    for(var i=0;i<cw.length;i++){ appendBits(bits,cw[i],8); }
+    var size=m.length, bit=0, upward=true;
+    for(var right=size-1;right>=1;right-=2){
+      if(right===6){ right--; }
+      for(var vert=0;vert<size;vert++){
+        var y=upward?size-1-vert:vert;
+        for(var j=0;j<2;j++){
+          var x=right-j;
+          if(!f[y][x]&&bit<bits.length){ m[y][x]=!!bits[bit++]; }
         }
-        document.getElementById("hotspotPill").onclick = function () {
-          toggleCheck("hotspot");
-        };
-        document.getElementById("reloadApp").onclick = function () {
-          var dirty = false;
-          if (view === "setup")
-            dirty =
-              document.getElementById("ssidInput").value !== state.ssid ||
-              document.getElementById("passInput").value !== state.password ||
-              document.getElementById("secInput").value !== state.security;
-          if (view === "usage") {
-            var summary = RouterCore.summary(state.plan, new Date());
-            dirty =
-              document.getElementById("limitInput").value !==
-                String(state.plan.limit || "") ||
-              document.getElementById("resetInput").value !==
-                String(state.plan.resetDay) ||
-              document.getElementById("usedInput").value !==
-                String(summary.record ? summary.record.used : "");
-          }
-          if (
-            dirty &&
-            !confirm("저장하지 않은 입력은 사라집니다. 새로고침할까요?")
-          )
-            return;
-          location.reload();
-        };
-        document.getElementById("editWifi").onclick = editWifi;
-        document.getElementById("settingsForm").onsubmit = saveSettings;
-        document.getElementById("editWifiHero").onclick = editWifi;
-        document.getElementById("moreChecks").onclick = function () {
-          showTab("shortcut");
-        };
-        document.querySelectorAll("[data-home]").forEach(function (b) {
-          b.onclick = function () {
-            showTab("connect");
-          };
-        });
-        document.getElementById("revealPass").onclick = function () {
-          revealed = !revealed;
-          render();
-        };
-        document.getElementById("copyPassword").onclick = function () {
-          copyText(state.password);
-        };
-        function networkState() {
-          document.getElementById("offline").className =
-            "offline" + (navigator.onLine ? "" : " show");
-        }
-        window.addEventListener("online", networkState);
-        window.addEventListener("offline", networkState);
-        networkState();
-        if (systemTheme.addEventListener)
-          systemTheme.addEventListener("change", applyTheme);
-        else systemTheme.addListener(applyTheme);
-        document
-          .querySelectorAll("[data-theme-choice]")
-          .forEach(function (button) {
-            button.onclick = function () {
-              var old = state.theme;
-              state.theme = button.dataset.themeChoice;
-              try {
-                localStorage.setItem(KEY, JSON.stringify(state));
-              } catch (e) {
-                state.theme = old;
-                toast("화면 설정을 저장하지 못했습니다");
-              }
-              applyTheme();
-            };
-          });
-        var switches = document.querySelectorAll("[data-toggle]");
-        for (var i = 0; i < switches.length; i++) {
-          switches[i].onclick = function () {
-            var k = this.getAttribute("data-toggle");
-            toggleCheck(k);
-          };
-        }
-      })();
-    </script>
-  </body>
+      }
+      upward=!upward;
+    }
+  }
+  function applyMask(m,f,mask){
+    for(var y=0;y<m.length;y++) for(var x=0;x<m.length;x++){
+      if(!f[y][x]&&maskBit(mask,x,y)){ m[y][x]=!m[y][x]; }
+    }
+  }
+  function maskBit(mask,x,y){
+    switch(mask){
+      case 0:return (x+y)%2===0; case 1:return y%2===0; case 2:return x%3===0; case 3:return (x+y)%3===0;
+      case 4:return (Math.floor(y/2)+Math.floor(x/3))%2===0; case 5:return ((x*y)%2+(x*y)%3)===0;
+      case 6:return (((x*y)%2+(x*y)%3)%2)===0; default:return (((x+y)%2+(x*y)%3)%2)===0;
+    }
+  }
+  function drawFormatBits(m,f,mask){
+    var bits=formatBits(mask), size=m.length;
+    for(var i=0;i<=5;i++) m[8][i]=!!((bits>>>i)&1);
+    m[8][7]=!!((bits>>>6)&1); m[8][8]=!!((bits>>>7)&1); m[7][8]=!!((bits>>>8)&1);
+    for(i=9;i<15;i++) m[14-i][8]=!!((bits>>>i)&1);
+    for(i=0;i<8;i++) m[size-1-i][8]=!!((bits>>>i)&1);
+    for(i=8;i<15;i++) m[8][size-15+i]=!!((bits>>>i)&1);
+  }
+  function formatBits(mask){
+    var data=(1<<3)|mask, rem=data;
+    rem<<=10;
+    for(var i=14;i>=10;i--){ if(((rem>>>i)&1)!==0){ rem^=0x537<<(i-10); } }
+    return ((data<<10)|rem)^0x5412;
+  }
+  function rsRemainder(data,degree){
+    var gen=rsGenerator(degree), rem=new Array(degree).fill(0);
+    for(var i=0;i<data.length;i++){
+      var factor=data[i]^rem.shift();
+      rem.push(0);
+      for(var j=0;j<degree;j++){ rem[j]^=gfMul(gen[j],factor); }
+    }
+    return rem;
+  }
+  function rsGenerator(degree){
+    var poly=[1];
+    for(var i=0;i<degree;i++){
+      var next=new Array(poly.length+1).fill(0);
+      for(var j=0;j<poly.length;j++){ next[j]^=gfMul(poly[j],gfPow(2,i)); next[j+1]^=poly[j]; }
+      poly=next;
+    }
+    poly.shift();
+    return poly;
+  }
+  function gfMul(x,y){
+    var z=0;
+    for(var i=7;i>=0;i--){ z=(z<<1)^(((z>>>7)&1)*0x11d); if(((y>>>i)&1)!==0){ z^=x; } }
+    return z&255;
+  }
+  function gfPow(x,n){ var y=1; while(n-- >0){ y=gfMul(y,x); } return y; }
+  function cloneMatrix(m){ return m.map(function(r){return r.slice();}); }
+  function qrPenalty(m){
+    var size=m.length, score=0, dark=0;
+    for(var y=0;y<size;y++){
+      var runColor=m[y][0], run=1;
+      for(var x=1;x<size;x++){
+        if(m[y][x]===runColor){ run++; } else { if(run>=5){ score+=run-2; } runColor=m[y][x]; run=1; }
+      }
+      if(run>=5){ score+=run-2; }
+    }
+    for(x=0;x<size;x++){
+      runColor=m[0][x]; run=1;
+      for(y=1;y<size;y++){
+        if(m[y][x]===runColor){ run++; } else { if(run>=5){ score+=run-2; } runColor=m[y][x]; run=1; }
+      }
+      if(run>=5){ score+=run-2; }
+    }
+    for(y=0;y<size-1;y++) for(x=0;x<size-1;x++){
+      var c=m[y][x]; if(c===m[y][x+1]&&c===m[y+1][x]&&c===m[y+1][x+1]){ score+=3; }
+    }
+    var pat=[true,false,true,true,true,false,true,false,false,false,false];
+    for(y=0;y<size;y++) for(x=0;x<=size-11;x++){ if(matchPat(m,y,x,0,1,pat)){ score+=40; } }
+    for(x=0;x<size;x++) for(y=0;y<=size-11;y++){ if(matchPat(m,y,x,1,0,pat)){ score+=40; } }
+    for(y=0;y<size;y++) for(x=0;x<size;x++){ if(m[y][x]){ dark++; } }
+    score+=Math.floor(Math.abs(dark*20-size*size*10)/(size*size))*10;
+    return score;
+  }
+  function matchPat(m,y,x,dy,dx,pat){ for(var i=0;i<pat.length;i++){ if(m[y+dy*i][x+dx*i]!==pat[i]){ return false; } } return true; }
+  function editWifi(){
+    showTab('setup');
+    document.getElementById('ssidInput').focus();
+  }
+  function saveSettings(){
+    state.ssid=document.getElementById('ssidInput').value.trim() || '핫스팟 이름';
+    state.password=document.getElementById('passInput').value;
+    state.security=document.getElementById('secInput').value;
+    save(); render(); toast('저장됨');
+  }
+  load();
+  document.documentElement.setAttribute('data-theme', window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  render();
+  if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
+    navigator.serviceWorker.register('./sw.js').catch(function(){});
+  }
+  document.getElementById('hotspotPill').onclick=function(){ state.hotspot=state.hotspot?0:1; save(); render(); };
+  document.getElementById('editWifi').onclick=editWifi;
+  document.getElementById('saveSettings').onclick=saveSettings;
+  var switches=document.querySelectorAll('[data-toggle]');
+  for(var i=0;i<switches.length;i++){
+    switches[i].onclick=function(){
+      var k=this.getAttribute('data-toggle');
+      state[k]=state[k]?0:1;
+      save(); render();
+    };
+  }
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++){
+    tabs[j].onclick=function(){ showTab(this.getAttribute('data-tab')); };
+  }
+})();
+</script>
+</body>
 </html>
